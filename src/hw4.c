@@ -199,12 +199,20 @@ int main() {
             if(!p2_joined){
                 //int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
                 //char start, trash;
-                if(strcmp(buffer, "B") == 0){
+                char start, trash;
+                int result = sscanf(buffer, " %c %c", &start, &trash);
+                if(result == 1 && start == 'B'){
                     p2_joined = 1;
                     printf("[Server] Enter message for client2: A\n");
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, "A", 2, 0);
                     wrote_to_c2 = 1;
+                }
+                else if(start != 'B'){
+                    printf("[Server] Enter message for client1: E 100\n");
+                    memset(buffer, 0, BUFFER_SIZE);
+                    send(conn_fd_2, "E 100", 6, 0);
+                    continue;
                 }
                 else{
                     printf("[Server] Enter message for client2: E 200\n");
