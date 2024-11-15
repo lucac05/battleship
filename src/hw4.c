@@ -97,6 +97,8 @@ int main() {
     int board_height = 0;
     // Receive and process commands
     while (1) {
+        int wrote_to_c1 = 0;
+        int wrote_to_c2 = 0;
         if(conn_fd_1 >= 0){
             memset(buffer, 0, BUFFER_SIZE);
 
@@ -124,12 +126,14 @@ int main() {
 
             if(!p1_joined){
                 //int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
-                char trash;
-                if(sscanf(buffer, "B %d %d %c", &board_width, &board_height, &trash) == 2 && board_width >= 10 && board_height >= 10 && trash == '\n'){//might need extra char at the end ensures that client's message contains ONLY those things
+                char start, trash;
+                int result = sscanf(buffer, " %c %d %d %c", &start, &board_width, &board_height, &trash);
+                if(result == 3 && start == 'B' && board_width >= 10 && board_height >= 10){
                     p1_joined = 1;
                     printf("[Server] Enter message for client1: A\n");
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_1, "A", 2, 0);
+                    wrote_to_c1 = 1;
                 }
                 else{
                     printf("[Server] Enter message for client1: E 200\n");
@@ -151,12 +155,13 @@ int main() {
                 }
             }*/
             
-
-            /*printf("[Server] Enter message for client1: response\n");
-            memset(buffer, 0, BUFFER_SIZE);
-            //fgets(buffer, BUFFER_SIZE, stdin);
-            //buffer[strlen(buffer)-1] = '\0';
-            send(conn_fd_1, "buffer\0", strlen(buffer), 0);*/
+            if(!wrote_to_c1){
+                printf("[Server] Enter message for client1: response\n");
+                memset(buffer, 0, BUFFER_SIZE);
+                //fgets(buffer, BUFFER_SIZE, stdin);
+                //buffer[strlen(buffer)-1] = '\0';
+                send(conn_fd_1, "buffer", 7, 0);
+           }
 
         }
 
@@ -187,11 +192,13 @@ int main() {
 
             if(!p2_joined){
                 //int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
-                if(buffer[0] == 'B'){//might need to check next char at the next pos ensures that client's message contains ONLY those things
+                //char start, trash;
+                if(strcmp(buffer, "B") == 0){
                     p2_joined = 1;
                     printf("[Server] Enter message for client2: A\n");
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, "A", 2, 0);
+                    wrote_to_c2 = 1;
                 }
                 else{
                     printf("[Server] Enter message for client2: E 200\n");
@@ -211,13 +218,13 @@ int main() {
                 }
             }*/
 
-
-
-            /*printf("[Server] Enter message for client2: response\n");
-            memset(buffer, 0, BUFFER_SIZE);
-            //fgets(buffer, BUFFER_SIZE, stdin);
-            //buffer[strlen(buffer)-1] = '\0';
-            send(conn_fd_2, "buffer\0", strlen(buffer), 0);*/
+            if(!wrote_to_c2){
+                printf("[Server] Enter message for client2: response\n");
+                memset(buffer, 0, BUFFER_SIZE);
+                //fgets(buffer, BUFFER_SIZE, stdin);
+                //buffer[strlen(buffer)-1] = '\0';
+                send(conn_fd_2, "buffer", 7, 0);
+            }
         }
         
 
