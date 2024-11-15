@@ -135,6 +135,12 @@ int main() {
                     send(conn_fd_1, "A", 2, 0);
                     wrote_to_c1 = 1;
                 }
+                else if(start != 'B'){
+                    printf("[Server] Enter message for client1: E 100\n");
+                    memset(buffer, 0, BUFFER_SIZE);
+                    send(conn_fd_1, "E 100", 6, 0);
+                    continue;
+                }
                 else{
                     printf("[Server] Enter message for client1: E 200\n");
                     memset(buffer, 0, BUFFER_SIZE);
