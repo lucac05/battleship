@@ -6,7 +6,6 @@
 #include <sys/socket.h>
 
 
-
 #define PORT_1 2201
 #define PORT_2 2202
 #define BUFFER_SIZE 1024
@@ -215,9 +214,9 @@ int main() {
                     continue;
                 }
                 else{
-                    printf("[Server] Enter message for client2: E 200\n");
+                    printf("[Server] Enter message for client2: E 100\n");//should be E 200 ?
                     memset(buffer, 0, BUFFER_SIZE);
-                    send(conn_fd_2, "E 200", 6, 0);
+                    send(conn_fd_2, "E 100", 6, 0);
                     continue;
                 }
             }
