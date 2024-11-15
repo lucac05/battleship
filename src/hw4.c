@@ -124,7 +124,8 @@ int main() {
 
             if(!p1_joined){
                 //int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
-                if(sscanf(buffer, "B %d %d", &board_width, &board_height) == 2 && board_width >= 10 && board_height >= 10){//might need extra char at the end ensures that client's message contains ONLY those things
+                char trash;
+                if(sscanf(buffer, "B %d %d %c", &board_width, &board_height, &trash) == 2 && board_width >= 10 && board_height >= 10 && trash == '\n'){//might need extra char at the end ensures that client's message contains ONLY those things
                     p1_joined = 1;
                     printf("[Server] Enter message for client1: A\n");
                     memset(buffer, 0, BUFFER_SIZE);
