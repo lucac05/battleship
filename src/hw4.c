@@ -100,6 +100,15 @@ int main() {
         if(conn_fd_1 >= 0){
             memset(buffer, 0, BUFFER_SIZE);
 
+            int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
+            if(buffer[0] == 'F'){
+                printf("[Server] Enter message for client1: H 0\n");
+                memset(buffer, 0, BUFFER_SIZE);
+                send(conn_fd_1, "H 0", 4, 0);
+                send(conn_fd_2, "H 1", 4, 0);
+                break;
+            }
+
             /*int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
             if (nbytes <= 0) {
                 perror("[Server] read() failed on port 2201");
@@ -114,7 +123,7 @@ int main() {
             }*/
 
             if(!p1_joined){
-                int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
+                //int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
                 if(sscanf(buffer, "B %d %d", &board_width, &board_height) == 2 && board_width >= 10 && board_height >= 10){//might need extra char at the end ensures that client's message contains ONLY those things
                     p1_joined = 1;
                     printf("[Server] Enter message for client1: A\n");
@@ -128,7 +137,9 @@ int main() {
                     continue;
                 }
             }
-            if(p1_joined && p2_joined){
+            
+            
+            /*if(p1_joined && p2_joined){
                 int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
                 if(buffer[0] == 'F'){
                     printf("[Server] Enter message for client1: H 0\n");
@@ -137,7 +148,7 @@ int main() {
                     send(conn_fd_2, "H 1", 4, 0);
                     break;
                 }
-            }
+            }*/
             
 
             /*printf("[Server] Enter message for client1: response\n");
@@ -150,6 +161,15 @@ int main() {
 
         if(conn_fd_2 >= 0){
             memset(buffer, 0, BUFFER_SIZE);
+
+            int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
+                if(buffer[0] == 'F'){
+                    printf("[Server] Enter message for client2: H 0\n");
+                    memset(buffer, 0, BUFFER_SIZE);
+                    send(conn_fd_2, "H 0", 4, 0);
+                    send(conn_fd_1, "H 1", 4, 0);
+                    break;
+                }
 
             /*int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
             if (nbytes <= 0) {
@@ -165,7 +185,7 @@ int main() {
             }*/
 
             if(!p2_joined){
-                int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
+                //int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
                 if(buffer[0] == 'B'){//might need to check next char at the next pos ensures that client's message contains ONLY those things
                     p2_joined = 1;
                     printf("[Server] Enter message for client2: A\n");
@@ -179,7 +199,7 @@ int main() {
                     continue;
                 }
             }
-            if(p1_joined && p2_joined){
+            /*if(p1_joined && p2_joined){
                 int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
                 if(buffer[0] == 'F'){
                     printf("[Server] Enter message for client2: H 0\n");
@@ -188,7 +208,9 @@ int main() {
                     send(conn_fd_1, "H 1", 4, 0);
                     break;
                 }
-            }
+            }*/
+
+
 
             /*printf("[Server] Enter message for client2: response\n");
             memset(buffer, 0, BUFFER_SIZE);
