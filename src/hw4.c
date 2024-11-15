@@ -214,9 +214,9 @@ int main() {
                     continue;
                 }
                 else{
-                    printf("[Server] Enter message for client2: E 100\n");//should be E 200 ?
+                    printf("[Server] Enter message for client2: E 200\n");//should be E 200 ?
                     memset(buffer, 0, BUFFER_SIZE);
-                    send(conn_fd_2, "E 100", 6, 0);
+                    send(conn_fd_2, "E 200", 6, 0);
                     continue;
                 }
             }
