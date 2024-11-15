@@ -128,6 +128,16 @@ int main() {
                     continue;
                 }
             }
+            if(p1_joined && p2_joined){
+                int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
+                if(buffer[0] == 'F'){
+                    printf("[Server] Enter message for client1: H 0\n");
+                    memset(buffer, 0, BUFFER_SIZE);
+                    send(conn_fd_1, "H 0", 4, 0);
+                    send(conn_fd_2, "H 1", 4, 0);
+                    break;
+                }
+            }
             
 
             /*printf("[Server] Enter message for client1: response\n");
@@ -167,6 +177,16 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, "E 100", 6, 0);
                     continue;
+                }
+            }
+            if(p1_joined && p2_joined){
+                int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
+                if(buffer[0] == 'F'){
+                    printf("[Server] Enter message for client2: H 0\n");
+                    memset(buffer, 0, BUFFER_SIZE);
+                    send(conn_fd_2, "H 0", 4, 0);
+                    send(conn_fd_1, "H 1", 4, 0);
+                    break;
                 }
             }
 
