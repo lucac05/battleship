@@ -124,11 +124,16 @@ int main() {
     int p2_init = 0;
     int board_width = 0;
     int board_height = 0;
+
+
+    int wrote_to_c1 = 0;
+    int wrote_to_c2 = 0;
+    int read_from_c1 = 1;
+    int read_from_c2 = 1;
     // Receive and process commands
     while (1) {
-        int wrote_to_c1 = 0;
-        int wrote_to_c2 = 0;
-        if(conn_fd_1 >= 0){
+        
+        if(conn_fd_1 >= 0 && read_from_c1){
             memset(buffer, 0, BUFFER_SIZE);
 
             int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
@@ -543,17 +548,26 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, "A", 2, 0);
                     wrote_to_c2 = 1;
+
+                    read_from_c1 = 1;
+
                 }
                 else if(start != 'B'){
                     printf("[Server] Enter message for client1: E 100\n");
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, "E 100", 6, 0);
+                    
+                    read_from_c1 = 0;
+
                     continue;
                 }
                 else{
                     printf("[Server] Enter message for client2: E 200\n");//should be E 100 ?
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, "E 200", 6, 0);
+
+                    read_from_c1 = 0;
+
                     continue;
                 }
             }
@@ -846,6 +860,9 @@ int main() {
                     printf("[Server] Enter message for client1: %s\n", err_str);
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, err_str, sizeof(err_str), 0);
+
+                    read_from_c1 = 0;
+
                     continue;
                 }
                 else{
@@ -854,6 +871,8 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, "A", 2, 0);
                     wrote_to_c2 = 1;
+
+                    read_from_c1 = 1;
                 }
             }
 
