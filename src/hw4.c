@@ -149,6 +149,7 @@ int main() {
             int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
 
             if(p2_forfeited){
+                printf("[Server] Enter message for client1: H 1\n");
                 send(conn_fd_1, "H 1", 4, 0);
                 break;
             }
@@ -159,6 +160,7 @@ int main() {
                 printf("[Server] Enter message for client1: H 0\n");
                 memset(buffer, 0, BUFFER_SIZE);
                 send(conn_fd_1, "H 0", 4, 0);
+                wrote_to_c1 = 1;
                 //send(conn_fd_2, "H 1", 4, 0);
                 
             }
@@ -515,7 +517,7 @@ int main() {
                 }
             }*/
             
-            if(!wrote_to_c1 && !p1_forfeited){
+            if(!wrote_to_c1){
                 printf("[Server] Enter message for client1: response\n");
                 memset(buffer, 0, BUFFER_SIZE);
                 //fgets(buffer, BUFFER_SIZE, stdin);
@@ -531,6 +533,7 @@ int main() {
             int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
 
             if(p1_forfeited){
+                printf("[Server] Enter message for client2: H 1n");
                 send(conn_fd_2, "H 1", 4, 0);
                 break;
             }
