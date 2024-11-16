@@ -553,10 +553,9 @@ int main() {
                 if(start == 'S' && result != 3)
                     err = min(err, 202);//invalid number of parameters (assuming S-type)
                 
-                if(start == 'S' && !(row_shot >= 0 && row_shot < glbl_height && col_shot >= 0 && col_shot < glbl_width))
+                if(start == 'S' && result == 3 && !(row_shot >= 0 && row_shot < glbl_height && col_shot >= 0 && col_shot < glbl_width))
                     err = min(err, 400);//cell not in game board (assuming S-type)
-
-                if(start == 'S' && p1->my_shots[row_shot][col_shot])
+                else if(start == 'S' && result == 3 && p1->my_shots[row_shot][col_shot])
                     err = min(err, 401);//cell already guessed (assuming S-type)
                 
                 if(err != 9999999){//there was an error
@@ -1034,10 +1033,9 @@ int main() {
                 if(start == 'S' && result != 3)
                     err = min(err, 202);//invalid number of parameters (assuming S-type)
                 
-                if(start == 'S' && !(row_shot >= 0 && row_shot < glbl_height && col_shot >= 0 && col_shot < glbl_width))
+                if(start == 'S' && result == 3 && !(row_shot >= 0 && row_shot < glbl_height && col_shot >= 0 && col_shot < glbl_width))
                     err = min(err, 400);//cell not in game board (assuming S-type)
-
-                if(start == 'S' && p2->my_shots[row_shot][col_shot])
+                else if(start == 'S' && result == 3 && p2->my_shots[row_shot][col_shot])
                     err = min(err, 401);//cell already guessed (assuming S-type)
                 
                 if(err != 9999999){//there was an error
