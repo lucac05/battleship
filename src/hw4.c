@@ -566,7 +566,7 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, "E 200", 6, 0);
 
-                    //read_from_c1 = 0;
+                    //read_from_c1 = 0
 
                     continue;
                 }
