@@ -582,7 +582,8 @@ int main() {
 
                     printf("[Server] Enter message for client1: %s\n", err_str);
                     memset(buffer, 0, BUFFER_SIZE);
-                    send(conn_fd_1, err_str, sizeof(err_str), 0);
+                    if(send(conn_fd_1, err_str, sizeof(err_str), 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
                     continue;
                     
                 }
@@ -1115,7 +1116,8 @@ int main() {
 
                     printf("[Server] Enter message for client2: %s\n", err_str);
                     memset(buffer, 0, BUFFER_SIZE);
-                    send(conn_fd_2, err_str, sizeof(err_str), 0);
+                    if(send(conn_fd_2, err_str, sizeof(err_str), 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
                     
                     read_from_c1 = 0;
                     wrote_to_c2 = 0;
