@@ -625,7 +625,7 @@ int main() {
                 else if(start == 'Q'){
                     //dont check for extraneous params because there's no error message for it
                     char helper_str[99] = {0};
-                    snprintf(helper_str, sizeof(helper_str), "%d ", p2->num_ships);
+                    snprintf(helper_str, sizeof(helper_str), "%d", p2->num_ships);
                     char msg_str[999];
                     strcpy(msg_str, "G ");
                     strcat(msg_str, helper_str);
@@ -636,15 +636,15 @@ int main() {
                             if(p1->my_shots[r][c] == 0)
                                 continue;
                             int hit_at_pos = p1->my_shots[r][c] == 1;//1 if hit, -1 if miss
-                            char printout[2] = {hit_at_pos ? 'H' : 'M', ' '};
+                            char printout[2] = {' ', hit_at_pos ? 'H' : 'M'};
                             strcat(msg_str, printout);
                             memset(helper_str, 0, sizeof(helper_str));
-                            snprintf(helper_str, sizeof(helper_str), "%d %d ", c, r);
+                            snprintf(helper_str, sizeof(helper_str), " %d %d ", c, r);
                             strcat(msg_str, helper_str);
                         }
                     }
                     
-                    msg_str[strlen(msg_str) - 1] = '\0';//replace the last space with null terminator
+                    msg_str[strlen(msg_str)] = '\0';//append null terminator
                     printf("[Server] Enter message for client1: %s\n", msg_str);
                     send(conn_fd_1, msg_str, sizeof(msg_str), 0);
                     memset(buffer, 0, BUFFER_SIZE);
@@ -1150,7 +1150,7 @@ int main() {
                 else if(start == 'Q'){
                     //dont check for extraneous params because there's no error message for it
                     char helper_str[99] = {0};
-                    snprintf(helper_str, sizeof(helper_str), "%d ", p1->num_ships);
+                    snprintf(helper_str, sizeof(helper_str), "%d", p1->num_ships);
                     char msg_str[999];
                     strcpy(msg_str, "G ");
                     strcat(msg_str, helper_str);
@@ -1161,7 +1161,7 @@ int main() {
                             if(p2->my_shots[r][c] == 0)
                                 continue;
                             int hit_at_pos = p2->my_shots[r][c] == 1;//1 if hit, -1 if miss
-                            char printout[2] = {hit_at_pos ? 'H' : 'M', ' '};
+                            char printout[3] = {' ', hit_at_pos ? 'H' : 'M', ' '};
                             strcat(msg_str, printout);
                             memset(helper_str, 0, sizeof(helper_str));
                             snprintf(helper_str, sizeof(helper_str), "%d %d ", c, r);
@@ -1169,7 +1169,7 @@ int main() {
                         }
                     }
                     
-                    msg_str[strlen(msg_str) - 1] = '\0';//replace the last space with null terminator
+                    msg_str[strlen(msg_str)] = '\0';//replace the last space with null terminator
                     printf("[Server] Enter message for client2: %s\n", msg_str);
                     send(conn_fd_2, msg_str, sizeof(msg_str), 0);
                     memset(buffer, 0, BUFFER_SIZE);
