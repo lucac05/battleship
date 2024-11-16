@@ -644,7 +644,10 @@ int main() {
                         }
                     }
                     
-                    msg_str[strlen(msg_str)] = '\0';//append null terminator
+                    if(msg_str[strlen(msg_str) - 1] == ' ')
+                        msg_str[strlen(msg_str) - 1] = '\0';
+                    else
+                        msg_str[strlen(msg_str)] = '\0';
                     printf("[Server] Enter message for client1: %s\n", msg_str);
                     send(conn_fd_1, msg_str, sizeof(msg_str), 0);
                     memset(buffer, 0, BUFFER_SIZE);
@@ -1169,7 +1172,11 @@ int main() {
                         }
                     }
                     
-                    msg_str[strlen(msg_str)] = '\0';//replace the last space with null terminator
+                    if(msg_str[strlen(msg_str) - 1] == ' ')
+                        msg_str[strlen(msg_str) - 1] = '\0';
+                    else
+                        msg_str[strlen(msg_str)] = '\0';
+                
                     printf("[Server] Enter message for client2: %s\n", msg_str);
                     send(conn_fd_2, msg_str, sizeof(msg_str), 0);
                     memset(buffer, 0, BUFFER_SIZE);
