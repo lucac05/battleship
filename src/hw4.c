@@ -613,8 +613,11 @@ int main() {
                     //VERY LIKELY WRONG
                     if(p2->num_ships == 0){
                         send(conn_fd_2, "H 0", 4, 0);
-                        send(conn_fd_1, "H 1", 4, 0);
-                        break;
+                        //need to read from p1 in between
+                        p2_forfeited = 1;
+                        continue;
+                        //send(conn_fd_1, "H 1", 4, 0);
+                        //break;
                     } 
                 }
             }
@@ -1098,10 +1101,13 @@ int main() {
                     wrote_to_c2 = 1;
 
                     //VERY LIKELY WRONG
-                    if(p1->num_ships == 0){
+                    if(p1->num_ships == 0){//p2 won
                         send(conn_fd_1, "H 0", 4, 0);
-                        send(conn_fd_2, "H 1", 4, 0);
-                        break;
+                        p1_forfeited = 1;
+                        read_from_c1 = 0;
+                        //send(conn_fd_2, "H 1", 4, 0);
+                        //break;
+                        continue;
                     } 
                 }
 
