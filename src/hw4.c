@@ -164,6 +164,9 @@ int main() {
     int p1_forfeited = 0;
     int p2_forfeited = 0;
 
+    int p1_shot = 0;
+    int p2_shot = 0;
+
     Player *p1;
     Player *p2;
     // Receive and process commands
@@ -541,7 +544,7 @@ int main() {
                 }
                 
             }
-            if(p1_init && p2_init && !p1_forfeited){
+            if(p1_init && p2_init && !p1_forfeited && !p1_shot){
                 int row_shot, col_shot;
                 char start, trash;
                 int result = sscanf(buffer, " %c %d %d %c", &start, &row_shot, &col_shot, &trash);
@@ -572,6 +575,8 @@ int main() {
                     continue;
                     
                 }
+                p1_shot = 1;
+                p2_shot = 0;
                 
                 //handling S
                 if(start == 'S'){
@@ -1022,12 +1027,12 @@ int main() {
             }
             
             
-            if(p1_init && p2_init && !wrote_to_c2){
+            if(p1_init && p2_init && p1_shot && !p2_shot){
                 int row_shot, col_shot;
                 char start, trash;
                 int result = sscanf(buffer, " %c %d %d %c", &start, &row_shot, &col_shot, &trash);
                 int err = 9999999;
-                
+                printf("HERE ONCE");
                 if(start != 'S' && start != 'Q')
                     err = min(err, 102);//invalid packet type
                 
@@ -1039,6 +1044,7 @@ int main() {
                 else if(start == 'S' && result == 3 && p2->my_shots[row_shot][col_shot])
                     err = min(err, 401);//cell already guessed (assuming S-type)
                 
+                printf("CURRENT ERROR %d", err);
                 if(err != 9999999){//there was an error
                     printf("ERROR IN BUFFER: %s", buffer);
                     char tmp_str[999];
@@ -1053,9 +1059,12 @@ int main() {
                     send(conn_fd_2, err_str, sizeof(err_str), 0);
                     
                     read_from_c1 = 0;
+                    wrote_to_c2 = 0;
                     continue;
                 }
                 read_from_c1 = 1;
+                p2_shot = 1;
+                p1_shot = 0;
                 
                 //handling S
                 if(start == 'S'){
