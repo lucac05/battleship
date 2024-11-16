@@ -542,13 +542,14 @@ int main() {
             char start, trash;
             int result = sscanf(buffer, " %c %c", &start, &trash);
             if(result == 1 && start == 'F'){
+                read_from_c1 = 1;
                 p2_forfeited = 1;
                 printf("[Server] Enter message for client2: H 0\n");
                 memset(buffer, 0, BUFFER_SIZE);
                 if(send(conn_fd_2, "H 0", 4, 0) < 0)
                     perror("[Server] Failed to send halt packet to forfeiting player.");
-                send(conn_fd_1, "H 1", 4, 0);//removed
-                break;//continue;
+                //send(conn_fd_1, "H 1", 4, 0);//removed
+                continue;
             }
 
             /*int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
@@ -599,7 +600,7 @@ int main() {
                 }
             }
             
-            if(p2_joined && p1_init && !p2_init){
+            if(p2_joined && p1_init && !p2_init && !wrote_to_c2){
                 char start, trash;
                 int numbers[20] = {-1};
                 int result = sscanf(buffer, " %c %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %c",
