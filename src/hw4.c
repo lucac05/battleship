@@ -636,7 +636,7 @@ int main() {
                             if(p1->my_shots[r][c] == 0)
                                 continue;
                             int hit_at_pos = p1->my_shots[r][c] == 1;//1 if hit, -1 if miss
-                            char printout[4] = {' ', hit_at_pos ? 'H' : 'M', ' '};
+                            char printout[3] = {' ', hit_at_pos ? 'H' : 'M', ' '};
                             strcat(msg_str, printout);
                             memset(helper_str, 0, sizeof(helper_str));
                             snprintf(helper_str, sizeof(helper_str), "%d %d ", c, r);
@@ -1164,7 +1164,7 @@ int main() {
                             if(p2->my_shots[r][c] == 0)
                                 continue;
                             int hit_at_pos = p2->my_shots[r][c] == 1;//1 if hit, -1 if miss
-                            char printout[4] = {' ', hit_at_pos ? 'H' : 'M', ' '};
+                            char printout[3] = {' ', hit_at_pos ? 'H' : 'M', ' '};
                             strcat(msg_str, printout);
                             memset(helper_str, 0, sizeof(helper_str));
                             snprintf(helper_str, sizeof(helper_str), "%d %d ", c, r);
