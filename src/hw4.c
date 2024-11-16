@@ -854,7 +854,7 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, "A", 2, 0);
                     wrote_to_c2 = 1;
-                }*?
+                }*/
             }
 
             
