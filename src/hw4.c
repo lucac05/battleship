@@ -147,6 +147,10 @@ int main() {
             memset(buffer, 0, BUFFER_SIZE);
 
             int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
+            if (nbytes <= 0) {
+                perror("[Server] read() failed on port 2202");
+                exit(EXIT_FAILURE);
+            }
 
             if(p2_forfeited){
                 printf("[Server] Enter message for client1: H 1\n");
@@ -532,6 +536,10 @@ int main() {
             memset(buffer, 0, BUFFER_SIZE);
 
             int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
+            if (nbytes <= 0) {
+                perror("[Server] read() failed on port 2202");
+                exit(EXIT_FAILURE);
+            }
 
             if(p1_forfeited){
                 printf("[Server] Enter message for client2: H 1\n");
