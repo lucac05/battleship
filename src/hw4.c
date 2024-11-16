@@ -529,11 +529,11 @@ int main() {
                     send(conn_fd_1, err_str, sizeof(err_str), 0);
 
 
-                    for(int i = 0; i < glbl_height; i++)
+                    /*for(int i = 0; i < glbl_height; i++)
                         free(p1->board[i]);
                     free(p1->board);
                     free(p1);
-                    p1 = NULL;
+                    p1 = NULL;*/
 
 
 
@@ -1061,11 +1061,11 @@ int main() {
                     read_from_c1 = 0;
 
 
-                    for(int i = 0; i < glbl_height; i++)
+                    /*for(int i = 0; i < glbl_height; i++)
                         free(p2->board[i]);
                     free(p2->board);
                     free(p2);
-                    p2 = NULL;
+                    p2 = NULL;*/
 
                     continue;
                 }
