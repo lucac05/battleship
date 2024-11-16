@@ -527,6 +527,17 @@ int main() {
                     printf("[Server] Enter message for client1: %s\n", err_str);
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_1, err_str, sizeof(err_str), 0);
+
+
+                    for(int i = 0; i < glbl_height; i++)
+                        free(p1->board[i]);
+                    free(p1->board);
+                    free(p1);
+                    p1 = NULL;
+
+
+
+
                     continue;
                     //REMEMBER TO FREE HERE TO ADDRESS MULTIPLE MALLOC
                 }
@@ -1049,6 +1060,13 @@ int main() {
 
                     read_from_c1 = 0;
 
+
+                    for(int i = 0; i < glbl_height; i++)
+                        free(p2->board[i]);
+                    free(p2->board);
+                    free(p2);
+                    p2 = NULL;
+
                     continue;
                 }
                 else{
@@ -1222,6 +1240,22 @@ int main() {
             break;
         }
     }
+
+    for(int i = 0; i < glbl_height; i++){
+        free(p1->board[i]);
+        free(p1->my_shots[i]);
+        free(p2->board[i]);
+        free(p2->my_shots[i]);
+    }
+    free(p1->board);
+    free(p1->my_shots);
+    free(p2->board);
+    free(p2->my_shots);
+    free(p1);
+    free(p2);
+    p1 = NULL;
+    p2 = NULL;
+
 
     printf("[Server] Shutting down.\n");
     close(conn_fd_1);
