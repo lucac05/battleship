@@ -183,7 +183,8 @@ int main() {
 
             if(p2_forfeited){
                 printf("[Server] Enter message for client1: H 1\n");
-                send(conn_fd_1, "H 1", 4, 0);
+                if(send(conn_fd_1, "H 1", 4, 0) < 0)
+                    perror("[Server] Failed to send packet to player.");
                 break;
             }
             char start, trash;
@@ -220,7 +221,9 @@ int main() {
                     p1_joined = 1;
                     printf("[Server] Enter message for client1: A\n");
                     memset(buffer, 0, BUFFER_SIZE);
-                    send(conn_fd_1, "A", 2, 0);
+                    
+                    if(send(conn_fd_1, "A", 2, 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
                     wrote_to_c1 = 1;
 
                     glbl_height = board_height;
@@ -229,13 +232,18 @@ int main() {
                 else if(start != 'B'){
                     printf("[Server] Enter message for client1: E 100\n");
                     memset(buffer, 0, BUFFER_SIZE);
-                    send(conn_fd_1, "E 100", 6, 0);
+                    if(send(conn_fd_1, "E 100", 6, 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
+                    
                     continue;
                 }
                 else{
                     printf("[Server] Enter message for client1: E 200\n");
                     memset(buffer, 0, BUFFER_SIZE);
-                    send(conn_fd_1, "E 200", 6, 0);
+                    
+                    if(send(conn_fd_1, "E 200", 6, 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
+                    
                     continue;
                 }
             }
@@ -526,7 +534,9 @@ int main() {
 
                     printf("[Server] Enter message for client1: %s\n", err_str);
                     memset(buffer, 0, BUFFER_SIZE);
-                    send(conn_fd_1, err_str, sizeof(err_str), 0);
+                    if(send(conn_fd_1, err_str, sizeof(err_str), 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
+                    
 
 
                     /*for(int i = 0; i < glbl_height; i++)
@@ -550,7 +560,9 @@ int main() {
                     p1_init = 1;
                     printf("[Server] Enter message for client1: A\n");
                     memset(buffer, 0, BUFFER_SIZE);
-                    send(conn_fd_1, "A", 2, 0);
+                    if(send(conn_fd_1, "A", 2, 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
+                    
                     wrote_to_c1 = 1;
                 }
                 
@@ -619,14 +631,18 @@ int main() {
                     strcat(msg_str, printout);
 
                     printf("[Server] Enter message for client1: %s\n", msg_str);
-                    send(conn_fd_1, msg_str, sizeof(msg_str), 0);
+                    if(send(conn_fd_1, msg_str, sizeof(msg_str), 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
+                    
                     memset(buffer, 0, BUFFER_SIZE);
 
                     wrote_to_c1 = 1;
 
                     //VERY LIKELY WRONG
                     if(p2->num_ships == 0){
-                        send(conn_fd_2, "H 0", 4, 0);
+                        if(send(conn_fd_2, "H 0", 4, 0) < 0)
+                            perror("[Server] Failed to send packet to player.");
+                        
                         //need to read from p1 in between
                         p2_forfeited = 1;
                         continue;
@@ -661,7 +677,9 @@ int main() {
                     else
                         msg_str[strlen(msg_str)] = '\0';
                     printf("[Server] Enter message for client1: %s\n", msg_str);
-                    send(conn_fd_1, msg_str, sizeof(msg_str), 0);
+                    if(send(conn_fd_1, msg_str, sizeof(msg_str), 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
+                    
                     memset(buffer, 0, BUFFER_SIZE);
                     continue;//still p1's turn so skip p2
 
@@ -689,7 +707,9 @@ int main() {
                 memset(buffer, 0, BUFFER_SIZE);
                 //fgets(buffer, BUFFER_SIZE, stdin);
                 //buffer[strlen(buffer)-1] = '\0';
-                send(conn_fd_1, "buffer", 7, 0);
+                if(send(conn_fd_1, "buffer", 7, 0) < 0)
+                    perror("[Server] Failed to send packet to player.");
+                
            }
 
         }
@@ -705,7 +725,9 @@ int main() {
 
             if(p1_forfeited){
                 printf("[Server] Enter message for client2: H 1\n");
-                send(conn_fd_2, "H 1", 4, 0);
+                if(send(conn_fd_2, "H 1", 4, 0) < 0)
+                    perror("[Server] Failed to send packet to player.");
+                
                     
                 break;
             }
@@ -744,7 +766,9 @@ int main() {
                     p2_joined = 1;
                     printf("[Server] Enter message for client2: A\n");
                     memset(buffer, 0, BUFFER_SIZE);
-                    send(conn_fd_2, "A", 2, 0);
+                    
+                    if(send(conn_fd_2, "A", 2, 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
                     wrote_to_c2 = 1;
 
                     read_from_c1 = 1;
@@ -753,7 +777,10 @@ int main() {
                 else if(start != 'B'){
                     printf("[Server] Enter message for client1: E 100\n");
                     memset(buffer, 0, BUFFER_SIZE);
-                    send(conn_fd_2, "E 100", 6, 0);
+                    
+
+                    if(send(conn_fd_2, "E 100", 6, 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
                     
                     read_from_c1 = 0;
 
@@ -762,7 +789,9 @@ int main() {
                 else{
                     printf("[Server] Enter message for client2: E 200\n");//should be E 100 ?
                     memset(buffer, 0, BUFFER_SIZE);
-                    send(conn_fd_2, "E 200", 6, 0);
+                    if(send(conn_fd_2, "E 200", 6, 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
+                    
 
                     read_from_c1 = 0;
 
@@ -1057,7 +1086,9 @@ int main() {
 
                     printf("[Server] Enter message for client1: %s\n", err_str);
                     memset(buffer, 0, BUFFER_SIZE);
-                    send(conn_fd_2, err_str, sizeof(err_str), 0);
+                    if(send(conn_fd_2, err_str, sizeof(err_str), 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
+                    
 
                     read_from_c1 = 0;
 
@@ -1079,7 +1110,9 @@ int main() {
                     p2_init = 1;
                     printf("[Server] Enter message for client2: A\n");
                     memset(buffer, 0, BUFFER_SIZE);
-                    send(conn_fd_2, "A", 2, 0);
+                    
+                    if(send(conn_fd_2, "A", 2, 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
                     wrote_to_c2 = 1;
 
                     read_from_c1 = 1;
@@ -1155,14 +1188,18 @@ int main() {
                     strcat(msg_str, printout);
 
                     printf("[Server] Enter message for client2: %s\n", msg_str);
-                    send(conn_fd_2, msg_str, sizeof(msg_str), 0);
+                    
+                    if(send(conn_fd_2, msg_str, sizeof(msg_str), 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
                     memset(buffer, 0, BUFFER_SIZE);
 
                     wrote_to_c2 = 1;
 
                     //VERY LIKELY WRONG
                     if(p1->num_ships == 0){//p2 won
-                        send(conn_fd_1, "H 0", 4, 0);
+                        
+                        if(send(conn_fd_1, "H 0", 4, 0) < 0)
+                            perror("[Server] Failed to send packet to player.");
                         p1_forfeited = 1;
                         read_from_c1 = 0;
                         //send(conn_fd_2, "H 1", 4, 0);
@@ -1198,7 +1235,9 @@ int main() {
                         msg_str[strlen(msg_str)] = '\0';
                 
                     printf("[Server] Enter message for client2: %s\n", msg_str);
-                    send(conn_fd_2, msg_str, sizeof(msg_str), 0);
+                    
+                    if(send(conn_fd_2, msg_str, sizeof(msg_str), 0) < 0)
+                        perror("[Server] Failed to send packet to player.");
                     memset(buffer, 0, BUFFER_SIZE);
                     read_from_c1 = 0;
                     continue;//still p2's turn so skip p1
@@ -1232,7 +1271,10 @@ int main() {
                 memset(buffer, 0, BUFFER_SIZE);
                 //fgets(buffer, BUFFER_SIZE, stdin);
                 //buffer[strlen(buffer)-1] = '\0';
-                send(conn_fd_2, "buffer", 7, 0);
+                
+                if(send(conn_fd_2, "buffer", 7, 0) < 0)
+                    perror("[Server] Failed to send packet to player.");
+                
             }
         }
         
