@@ -232,6 +232,7 @@ int main() {
                     int start_col;
                     int start_row;
                 } Piece;
+
                 typedef struct Player{
                     int **board;
                     Piece my_pieces[5];//only need 5 tho
@@ -472,13 +473,13 @@ int main() {
                     send(conn_fd_1, err_str, sizeof(err_str), 0);
                     continue;
                 }
-                else{
+                //else{
                     p1_init = 1;
-                    printf("[Server] Enter message for client1: A\n");
+                    /*printf("[Server] Enter message for client1: A\n");
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_1, "A", 2, 0);
                     wrote_to_c1 = 1;
-                }
+                }*/
                 
             }
 
@@ -606,6 +607,7 @@ int main() {
                     int start_col;
                     int start_row;
                 } Piece;
+
                 typedef struct Player{
                     int **board;
                     Piece my_pieces[5];//only need 5 tho
@@ -846,13 +848,13 @@ int main() {
                     send(conn_fd_2, err_str, sizeof(err_str), 0);
                     continue;
                 }
-                else{
+                //else{
                     p2_init = 1;
-                    printf("[Server] Enter message for client2: A\n");
+                    /*printf("[Server] Enter message for client2: A\n");
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, "A", 2, 0);
                     wrote_to_c2 = 1;
-                }
+                }*/
             }
 
             
