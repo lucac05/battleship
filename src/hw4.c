@@ -82,7 +82,7 @@ int main() {
     address_2.sin_port = htons(PORT_2);
 
 
-    
+
 
     if (bind(listen_fd_1, (struct sockaddr *)&address_1, sizeof(address_1)) < 0) {
         perror("[Server] bind() failed on port 2201");
@@ -136,6 +136,10 @@ int main() {
     int wrote_to_c2 = 0;
     //int read_from_c1 = 1;
     int read_from_c2 = 1;
+
+    int p1_forfeited = 0;
+    int p2_forfeited = 0;
+
     // Receive and process commands
     while (1) {
         
@@ -143,15 +147,20 @@ int main() {
             memset(buffer, 0, BUFFER_SIZE);
 
             int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
-            
+
+            if(p2_forfeited){
+                send(conn_fd_1, "H 1", 4, 0);
+                break;
+            }
             char start, trash;
             int result = sscanf(buffer, " %c %c", &start, &trash);
             if(result == 1 && start == 'F'){
+                p1_forfeited = 1;
                 printf("[Server] Enter message for client1: H 0\n");
                 memset(buffer, 0, BUFFER_SIZE);
                 send(conn_fd_1, "H 0", 4, 0);
-                send(conn_fd_2, "H 1", 4, 0);
-                break;
+                //send(conn_fd_2, "H 1", 4, 0);
+                
             }
 
             /*int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
@@ -167,7 +176,7 @@ int main() {
                 conn_fd_1 = -1;
             }*/
 
-            if(!p1_joined){
+            if(!p1_joined && !p1_forfeited){
                 //int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
                 char start, trash;
                 int result = sscanf(buffer, " %c %d %d %c", &start, &board_width, &board_height, &trash);
@@ -194,7 +203,7 @@ int main() {
                     continue;
                 }
             }
-            if(p2_joined && !p1_init){
+            if(p2_joined && !p1_init && !p1_forfeited){
                 char start, trash;
                 int numbers[20] = {-1};
                 int result = sscanf(buffer, " %c %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %c",
@@ -506,7 +515,7 @@ int main() {
                 }
             }*/
             
-            if(!wrote_to_c1){
+            if(!wrote_to_c1 && !p1_forfeited){
                 printf("[Server] Enter message for client1: response\n");
                 memset(buffer, 0, BUFFER_SIZE);
                 //fgets(buffer, BUFFER_SIZE, stdin);
@@ -520,14 +529,20 @@ int main() {
             memset(buffer, 0, BUFFER_SIZE);
 
             int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
+
+            if(p1_forfeited){
+                send(conn_fd_2, "H 1", 4, 0);
+                break;
+            }
             char start, trash;
             int result = sscanf(buffer, " %c %c", &start, &trash);
             if(result == 1 && start == 'F'){
+                p2_forfeited = 1;
                 printf("[Server] Enter message for client2: H 0\n");
                 memset(buffer, 0, BUFFER_SIZE);
                 send(conn_fd_2, "H 0", 4, 0);
-                send(conn_fd_1, "H 1", 4, 0);
-                break;
+                //send(conn_fd_1, "H 1", 4, 0);
+                continue;
             }
 
             /*int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
