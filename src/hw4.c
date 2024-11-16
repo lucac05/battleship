@@ -1100,12 +1100,14 @@ int main() {
                     wrote_to_c2 = 0;
                     continue;
                 }
-                read_from_c1 = 1;
-                p2_shot = 1;
-                p1_shot = 0;
+                
+                
                 
                 //handling S
                 if(start == 'S'){
+                    read_from_c1 = 1;//was outside
+                    p2_shot = 1;
+                    p1_shot = 0;
                     int hit = p1->board[row_shot][col_shot];
                     if(hit){
                         p2->my_shots[row_shot][col_shot] = 1;//remember the hit as (1)
@@ -1144,6 +1146,40 @@ int main() {
                         //break;
                         continue;
                     } 
+                }
+                else if(start == 'Q'){
+                    //dont check for extraneous params because there's no error message for it
+                    char helper_str[99] = {0};
+                    snprintf(helper_str, sizeof(helper_str), "%d ", p1->num_ships);
+                    char msg_str[999];
+                    strcpy(msg_str, "G ");
+                    strcat(msg_str, helper_str);
+                    printf("CUR_MSG: %s\n", msg_str);
+
+                    for(int r = 0; r < glbl_height; r++){
+                        for(int c = 0; c < glbl_width; c++){
+                            if(p2->my_shots[r][c] == 0)
+                                continue;
+                            int hit_at_pos = p2->my_shots[r][c] == 1;//1 if hit, -1 if miss
+                            char printout[2] = {hit_at_pos ? 'H' : 'M', ' '};
+                            strcat(msg_str, printout);
+                            memset(helper_str, 0, sizeof(helper_str));
+                            snprintf(helper_str, sizeof(helper_str), "%d %d ", c, r);
+                            strcat(msg_str, helper_str);
+                        }
+                    }
+                    
+                    msg_str[strlen(msg_str) - 1] = '\0';//replace the last space with null terminator
+                    printf("[Server] Enter message for client2: %s\n", msg_str);
+                    send(conn_fd_2, msg_str, sizeof(msg_str), 0);
+                    memset(buffer, 0, BUFFER_SIZE);
+                    read_from_c1 = 0;
+                    continue;//still p2's turn so skip p1
+
+                }
+                else{
+                    for(int i = 0; i < 1000; i++)
+                        printf("How did we get here?");
                 }
 
             }
