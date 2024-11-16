@@ -19,10 +19,18 @@ typedef struct Piece{
     int start_row;
 } Piece;
 
+/*typedef struct Shot{
+    int hit;//1 if hit, -1 if miss, 0 upon initialization
+} Shot;*/
+
 typedef struct Player{
     int **board;
     Piece my_pieces[5];
+    int **my_shots;//FOR EACH ENTRY: 1 if hit, -1 if miss, 0 upon initialization
+    int num_ships;
 } Player;
+
+
 
 
 int glbl_height, glbl_width;
@@ -35,6 +43,22 @@ int check_fit(int check_row, int check_col){
 
 int check_available(int **board, int row, int col){
     return board[row][col] == 0;
+}
+
+int check_sunk_ship(int **board, int target){
+    int count = 0;
+    for(int r = 0; r < glbl_height; r++){
+        for(int c = 0; c < glbl_width; c++){
+            if(board[r][c] == target)
+                count++;
+        }
+    }
+    if(count == 4)
+        return 1;//ship sunk (all 4 pieces hit)
+    if(count > 4 || count < 0)
+        return -999;//bad things happened
+    return 0;//ship not sunk
+    
 }
 
 
@@ -140,6 +164,8 @@ int main() {
     int p1_forfeited = 0;
     int p2_forfeited = 0;
 
+    Player *p1;
+    Player *p2;
     // Receive and process commands
     while (1) {
         
@@ -271,7 +297,7 @@ int main() {
 
                 if(err == 9999999){//error code BEFORE CHECKING 302 & 303
 
-                    Player *p1 = malloc(sizeof(Player));//FREE
+                    p1 = malloc(sizeof(Player));//FREE
                     p1->board = malloc(sizeof(int *) * board_height);//FREE
                     for(int i = 0; i < board_height; i++)
                         p1->board[i] = calloc(board_width, sizeof(int));//FREE
@@ -499,8 +525,14 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_1, err_str, sizeof(err_str), 0);
                     continue;
+                    //REMEMBER TO FREE HERE TO ADDRESS MULTIPLE MALLOC
                 }
                 else{
+                    p1->my_shots = malloc(sizeof(int *) * glbl_height);//FREE
+                    for(int i = 0; i < board_height; i++)
+                        p1->my_shots[i] = calloc(glbl_width, sizeof(int));//FREE
+                    
+                    p1->num_ships = 5;
                     p1_init = 1;
                     printf("[Server] Enter message for client1: A\n");
                     memset(buffer, 0, BUFFER_SIZE);
@@ -508,6 +540,78 @@ int main() {
                     wrote_to_c1 = 1;
                 }
                 
+            }
+            if(p1_init && p2_init && !p1_forfeited){
+                int row_shot, col_shot;
+                char start, trash;
+                int result = sscanf(buffer, " %c %d %d %c", &start, &row_shot, &col_shot, &trash);
+                int err = 9999999;
+                
+                if(start != 'S' && start != 'Q')
+                    err = min(err, 102);//invalid packet type
+                
+                if(start == 'S' && result != 3)
+                    err = min(err, 202);//invalid number of parameters (assuming S-type)
+                
+                if(start == 'S' && !(row_shot >= 0 && row_shot < glbl_height && col_shot >= 0 && col_shot < glbl_width))
+                    err = min(err, 400);//cell not in game board (assuming S-type)
+
+                if(start == 'S' && p1->my_shots[row_shot][col_shot])
+                    err = min(err, 401);//cell already guessed (assuming S-type)
+                
+                if(err != 9999999){//there was an error
+                    char tmp_str[999];
+                    snprintf(tmp_str, sizeof(tmp_str), "%d", err);
+
+                    char err_str[999];
+                    strcpy(err_str, "E ");
+                    strcat(err_str, tmp_str);
+
+                    printf("[Server] Enter message for client1: %s\n", err_str);
+                    memset(buffer, 0, BUFFER_SIZE);
+                    send(conn_fd_1, err_str, sizeof(err_str), 0);
+                    continue;
+                }
+                
+                //handling S
+                if(start == 'S'){
+                    int hit = p2->board[row_shot][col_shot];
+                    if(hit){
+                        p1->my_shots[row_shot][col_shot] = 1;//remember the hit as (1)
+                        p2->board[row_shot][col_shot] *= -1;//mark as a hit by negating
+                        int ship_sunk = check_sunk_ship(p2->board, p2->board[row_shot][col_shot]);//search for the same negative number
+                        if(ship_sunk)
+                            p2->num_ships--;//need to handle case of sinking all ships
+                    }
+                    else{
+                        p1->my_shots[row_shot][col_shot] = -1;//remember the miss as (-1)
+                        p2->board[row_shot][col_shot] = 9;//mark as a miss by setting to 9 (water, not a ship)
+                    }
+                    char printout[2] = {hit ? 'H' : 'M', '\0'};
+                    
+                    
+                    
+                    char tmp_str[999];
+                    snprintf(tmp_str, sizeof(tmp_str), "%d", p2->num_ships);
+
+                    char msg_str[999];
+                    strcpy(msg_str, "R ");
+                    strcat(msg_str, tmp_str);
+                    strcat(msg_str, printout);
+
+                    printf("[Server] Enter message for client1: %s\n", msg_str);
+                    send(conn_fd_1, msg_str, sizeof(msg_str), 0);
+                    memset(buffer, 0, BUFFER_SIZE);
+
+                    wrote_to_c1 = 1;
+
+                    //VERY LIKELY WRONG
+                    if(p2->num_ships == 0){
+                        send(conn_fd_2, "H 0", 4, 0);
+                        send(conn_fd_1, "H 1", 4, 0);
+                        break;
+                    } 
+                }
             }
 
             
@@ -669,23 +773,23 @@ int main() {
 
                 if(err == 9999999){//error code BEFORE CHECKING 302 & 303
 
-                    Player *p1 = malloc(sizeof(Player));//FREE
-                    p1->board = malloc(sizeof(int *) * board_height);//FREE
+                    p2 = malloc(sizeof(Player));//FREE
+                    p2->board = malloc(sizeof(int *) * board_height);//FREE
                     for(int i = 0; i < board_height; i++)
-                        p1->board[i] = calloc(board_width, sizeof(int));//FREE
+                        p2->board[i] = calloc(board_width, sizeof(int));//FREE
 
-                    Piece p1_piece_1 = {1, numbers[0], numbers[1], numbers[2], numbers[3]};
-                    Piece p1_piece_2 = {2, numbers[4], numbers[5], numbers[6], numbers[7]};
-                    Piece p1_piece_3 = {3, numbers[8], numbers[9], numbers[10], numbers[11]};
-                    Piece p1_piece_4 = {4, numbers[12], numbers[13], numbers[14], numbers[15]};
-                    Piece p1_piece_5 = {5, numbers[16], numbers[17], numbers[18], numbers[19]};
-                    Piece p1_pieces[5] = {p1_piece_1, p1_piece_2, p1_piece_3, p1_piece_4, p1_piece_5};
+                    Piece p2_piece_1 = {1, numbers[0], numbers[1], numbers[2], numbers[3]};
+                    Piece p2_piece_2 = {2, numbers[4], numbers[5], numbers[6], numbers[7]};
+                    Piece p2_piece_3 = {3, numbers[8], numbers[9], numbers[10], numbers[11]};
+                    Piece p2_piece_4 = {4, numbers[12], numbers[13], numbers[14], numbers[15]};
+                    Piece p2_piece_5 = {5, numbers[16], numbers[17], numbers[18], numbers[19]};
+                    Piece p2_pieces[5] = {p2_piece_1, p2_piece_2, p2_piece_3, p2_piece_4, p2_piece_5};
                     for(int i = 0; i < 5; i++)
-                        p1->my_pieces[i] = p1_pieces[i];
+                        p2->my_pieces[i] = p2_pieces[i];
                     
-                    //setup_board(numbers, p1->board);
+                    //setup_board(numbers, p2->board);
                     for(int i = 0; i < 5; i++){
-                        Piece cur = p1->my_pieces[i];
+                        Piece cur = p2->my_pieces[i];
                         int row_index = cur.start_row;
                         int col_index = cur.start_col;
 
@@ -694,37 +798,37 @@ int main() {
                                 err = min(err, 302); 
                             }
                             //checking for overlap
-                            if(p1->board[row_index][col_index] != 0 || p1->board[row_index][col_index + 1] != 0 || p1->board[row_index + 1][col_index] != 0 ||p1->board[row_index + 1][col_index + 1] != 0){
+                            if(p2->board[row_index][col_index] != 0 || p2->board[row_index][col_index + 1] != 0 || p2->board[row_index + 1][col_index] != 0 ||p2->board[row_index + 1][col_index + 1] != 0){
                                 err = min(err, 303);
                                 break;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
-                            p1->board[row_index][col_index] = cur.my_number;
-                            p1->board[row_index][col_index + 1] = cur.my_number;
-                            p1->board[row_index + 1][col_index] = cur.my_number;
-                            p1->board[row_index + 1][col_index + 1] = cur.my_number;
+                            p2->board[row_index][col_index] = cur.my_number;
+                            p2->board[row_index][col_index + 1] = cur.my_number;
+                            p2->board[row_index + 1][col_index] = cur.my_number;
+                            p2->board[row_index + 1][col_index + 1] = cur.my_number;
                         }
                         else if(cur.type == 2){//line
                             if(((cur.rotation == 1 || cur.rotation == 3) && row_index + 3 >= board_height) || ((cur.rotation == 2 || cur.rotation == 4) && col_index + 3 >= board_width)){//line goes out of boudns
                                 err = min(err, 302);
                             }
                             //checking for overlap
-                            if(((cur.rotation == 1 || cur.rotation == 3) && (p1->board[row_index][col_index] != 0 || p1->board[row_index + 1][col_index] != 0 || p1->board[row_index + 2][col_index] != 0 || p1->board[row_index + 3][col_index] != 0)) || ((cur.rotation == 2 || cur.rotation == 4) && (p1->board[row_index][col_index] != 0 || p1->board[row_index][col_index + 1] != 0 || p1->board[row_index][col_index + 2] != 0 || p1->board[row_index][col_index + 3] != 0))){
+                            if(((cur.rotation == 1 || cur.rotation == 3) && (p2->board[row_index][col_index] != 0 || p2->board[row_index + 1][col_index] != 0 || p2->board[row_index + 2][col_index] != 0 || p2->board[row_index + 3][col_index] != 0)) || ((cur.rotation == 2 || cur.rotation == 4) && (p2->board[row_index][col_index] != 0 || p2->board[row_index][col_index + 1] != 0 || p2->board[row_index][col_index + 2] != 0 || p2->board[row_index][col_index + 3] != 0))){
                                 err = min(err, 303);
                                 break;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1 || cur.rotation == 3){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index + 1][col_index] = cur.my_number;
-                                p1->board[row_index + 2][col_index] = cur.my_number;
-                                p1->board[row_index + 3][col_index] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index + 1][col_index] = cur.my_number;
+                                p2->board[row_index + 2][col_index] = cur.my_number;
+                                p2->board[row_index + 3][col_index] = cur.my_number;
                             }
                             else if(cur.rotation == 2 || cur.rotation == 4){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index][col_index + 1] = cur.my_number;
-                                p1->board[row_index][col_index + 2] = cur.my_number;
-                                p1->board[row_index][col_index + 3] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index][col_index + 1] = cur.my_number;
+                                p2->board[row_index][col_index + 2] = cur.my_number;
+                                p2->board[row_index][col_index + 3] = cur.my_number;
                             }
                         }
                         else if(cur.type == 3){//3_zig
@@ -732,22 +836,22 @@ int main() {
                                 err = min(err, 302);
                             }
                             //checking for overlap
-                            if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 2, col_index + 1)))){
+                            if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 2, col_index + 1)))){
                                 err = min(err, 303);
                                 break;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1 || cur.rotation == 3){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index][col_index + 1] = cur.my_number;
-                                p1->board[row_index - 1][col_index + 1] = cur.my_number;
-                                p1->board[row_index - 1][col_index + 2] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index][col_index + 1] = cur.my_number;
+                                p2->board[row_index - 1][col_index + 1] = cur.my_number;
+                                p2->board[row_index - 1][col_index + 2] = cur.my_number;
                             }
                             else if(cur.rotation == 2 || cur.rotation == 4){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index + 1][col_index] = cur.my_number;
-                                p1->board[row_index + 1][col_index + 1] = cur.my_number;
-                                p1->board[row_index + 2][col_index + 1] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index + 1][col_index] = cur.my_number;
+                                p2->board[row_index + 1][col_index + 1] = cur.my_number;
+                                p2->board[row_index + 2][col_index + 1] = cur.my_number;
                             }
                         }
                         else if(cur.type == 4){//L
@@ -755,34 +859,34 @@ int main() {
                                 err = min(err, 302);
                             }
                             //checking for overlap
-                            if((cur.rotation == 1 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 2, col_index) || !check_available(p1->board, row_index + 2, col_index + 1))) || (cur.rotation == 2 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index, col_index + 2))) || (cur.rotation == 3 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 2, col_index + 1))) || (cur.rotation == 4 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index, col_index + 2) || !check_available(p1->board, row_index - 1, col_index + 2)))){
+                            if((cur.rotation == 1 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 2, col_index) || !check_available(p2->board, row_index + 2, col_index + 1))) || (cur.rotation == 2 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index, col_index + 2))) || (cur.rotation == 3 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 2, col_index + 1))) || (cur.rotation == 4 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index, col_index + 2) || !check_available(p2->board, row_index - 1, col_index + 2)))){
                                 err = min(err, 303);
                                 break;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index + 1][col_index] = cur.my_number;
-                                p1->board[row_index + 2][col_index] = cur.my_number;
-                                p1->board[row_index + 2][col_index + 1] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index + 1][col_index] = cur.my_number;
+                                p2->board[row_index + 2][col_index] = cur.my_number;
+                                p2->board[row_index + 2][col_index + 1] = cur.my_number;
                             }
                             else if(cur.rotation == 2){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index + 1][col_index] = cur.my_number;
-                                p1->board[row_index][col_index + 1] = cur.my_number;
-                                p1->board[row_index][col_index + 2] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index + 1][col_index] = cur.my_number;
+                                p2->board[row_index][col_index + 1] = cur.my_number;
+                                p2->board[row_index][col_index + 2] = cur.my_number;
                             }
                             else if(cur.rotation == 3){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index][col_index + 1] = cur.my_number;
-                                p1->board[row_index + 1][col_index + 1] = cur.my_number;
-                                p1->board[row_index + 2][col_index + 1] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index][col_index + 1] = cur.my_number;
+                                p2->board[row_index + 1][col_index + 1] = cur.my_number;
+                                p2->board[row_index + 2][col_index + 1] = cur.my_number;
                             }
                             else if(cur.rotation == 4){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index][col_index + 1] = cur.my_number;
-                                p1->board[row_index][col_index + 2] = cur.my_number;
-                                p1->board[row_index - 1][col_index + 2] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index][col_index + 1] = cur.my_number;
+                                p2->board[row_index][col_index + 2] = cur.my_number;
+                                p2->board[row_index - 1][col_index + 2] = cur.my_number;
                             }
                         }
                         else if(cur.type == 5){//5_zig
@@ -790,22 +894,22 @@ int main() {
                                 err = min(err, 302);
                             }
                             //checking for overlap
-                            if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1)))){//zig goes out of boudds
+                            if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1)))){//zig goes out of boudds
                                 err = min(err, 303);
                                 break;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1 || cur.rotation == 3){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index][col_index + 1] = cur.my_number;
-                                p1->board[row_index + 1][col_index + 1] = cur.my_number;
-                                p1->board[row_index + 1][col_index + 2] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index][col_index + 1] = cur.my_number;
+                                p2->board[row_index + 1][col_index + 1] = cur.my_number;
+                                p2->board[row_index + 1][col_index + 2] = cur.my_number;
                             }
                             else if(cur.rotation == 2 || cur.rotation == 4){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index + 1][col_index] = cur.my_number;
-                                p1->board[row_index][col_index + 1] = cur.my_number;
-                                p1->board[row_index - 1][col_index + 1] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index + 1][col_index] = cur.my_number;
+                                p2->board[row_index][col_index + 1] = cur.my_number;
+                                p2->board[row_index - 1][col_index + 1] = cur.my_number;
                             }
                         }
                         else if(cur.type == 6){//new-L
@@ -813,34 +917,34 @@ int main() {
                                 err = min(err, 302);
                             }
                             //checking for overlap
-                            if((cur.rotation == 1 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1) || !check_available(p1->board, row_index - 2, col_index + 1))) || (cur.rotation == 2 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 2))) || (cur.rotation == 3 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 2, col_index))) || (cur.rotation == 4 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index, col_index + 2) || !check_available(p1->board, row_index + 1, col_index + 2)))){
+                            if((cur.rotation == 1 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1) || !check_available(p2->board, row_index - 2, col_index + 1))) || (cur.rotation == 2 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 2))) || (cur.rotation == 3 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 2, col_index))) || (cur.rotation == 4 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index, col_index + 2) || !check_available(p2->board, row_index + 1, col_index + 2)))){
                                 err = min(err, 303);
                                 break;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index][col_index + 1] = cur.my_number;
-                                p1->board[row_index - 1][col_index + 1] = cur.my_number;
-                                p1->board[row_index - 2][col_index + 1] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index][col_index + 1] = cur.my_number;
+                                p2->board[row_index - 1][col_index + 1] = cur.my_number;
+                                p2->board[row_index - 2][col_index + 1] = cur.my_number;
                             }
                             else if(cur.rotation == 2){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index + 1][col_index] = cur.my_number;
-                                p1->board[row_index + 1][col_index + 1] = cur.my_number;
-                                p1->board[row_index + 1][col_index + 2] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index + 1][col_index] = cur.my_number;
+                                p2->board[row_index + 1][col_index + 1] = cur.my_number;
+                                p2->board[row_index + 1][col_index + 2] = cur.my_number;
                             }
                             else if(cur.rotation == 3){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index][col_index + 1] = cur.my_number;
-                                p1->board[row_index + 1][col_index] = cur.my_number;
-                                p1->board[row_index + 2][col_index] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index][col_index + 1] = cur.my_number;
+                                p2->board[row_index + 1][col_index] = cur.my_number;
+                                p2->board[row_index + 2][col_index] = cur.my_number;
                             }
                             else if(cur.rotation == 4){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index][col_index + 1] = cur.my_number;
-                                p1->board[row_index][col_index + 2] = cur.my_number;
-                                p1->board[row_index + 1][col_index + 2] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index][col_index + 1] = cur.my_number;
+                                p2->board[row_index][col_index + 2] = cur.my_number;
+                                p2->board[row_index + 1][col_index + 2] = cur.my_number;
                             }
                         }
                         else if(cur.type == 7){//T
@@ -848,34 +952,34 @@ int main() {
                                 err = min(err, 302);
                             }
                             //checking for overlap
-                            if((cur.rotation == 1 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index, col_index + 2))) || (cur.rotation == 2 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 1))) || (cur.rotation == 3 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1) || !check_available(p1->board, row_index, col_index + 2))) || (cur.rotation == 4 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 2, col_index)))){
+                            if((cur.rotation == 1 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index, col_index + 2))) || (cur.rotation == 2 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 1))) || (cur.rotation == 3 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1) || !check_available(p2->board, row_index, col_index + 2))) || (cur.rotation == 4 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 2, col_index)))){
                                 err = min(err, 303);
                                 break;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index][col_index + 1] = cur.my_number;
-                                p1->board[row_index + 1][col_index + 1] = cur.my_number;
-                                p1->board[row_index][col_index + 2] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index][col_index + 1] = cur.my_number;
+                                p2->board[row_index + 1][col_index + 1] = cur.my_number;
+                                p2->board[row_index][col_index + 2] = cur.my_number;
                             }
                             else if(cur.rotation == 2){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index][col_index + 1] = cur.my_number;
-                                p1->board[row_index - 1][col_index + 1] = cur.my_number;
-                                p1->board[row_index + 1][col_index + 1] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index][col_index + 1] = cur.my_number;
+                                p2->board[row_index - 1][col_index + 1] = cur.my_number;
+                                p2->board[row_index + 1][col_index + 1] = cur.my_number;
                             }
                             else if(cur.rotation == 3){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index][col_index + 1] = cur.my_number;
-                                p1->board[row_index - 1][col_index + 1] = cur.my_number;
-                                p1->board[row_index][col_index + 2] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index][col_index + 1] = cur.my_number;
+                                p2->board[row_index - 1][col_index + 1] = cur.my_number;
+                                p2->board[row_index][col_index + 2] = cur.my_number;
                             }
                             else if(cur.rotation == 4){
-                                p1->board[row_index][col_index] = cur.my_number;
-                                p1->board[row_index + 1][col_index] = cur.my_number;
-                                p1->board[row_index + 1][col_index + 1] = cur.my_number;
-                                p1->board[row_index + 2][col_index] = cur.my_number;
+                                p2->board[row_index][col_index] = cur.my_number;
+                                p2->board[row_index + 1][col_index] = cur.my_number;
+                                p2->board[row_index + 1][col_index + 1] = cur.my_number;
+                                p2->board[row_index + 2][col_index] = cur.my_number;
                             }
                         }
                         
@@ -902,6 +1006,11 @@ int main() {
                     continue;
                 }
                 else{
+                    p2->my_shots = malloc(sizeof(int *) * glbl_height);//FREE
+                    for(int i = 0; i < board_height; i++)
+                        p2->my_shots[i] = calloc(glbl_width, sizeof(int));//FREE
+                    
+                    p2->num_ships = 5;
                     p2_init = 1;
                     printf("[Server] Enter message for client2: A\n");
                     memset(buffer, 0, BUFFER_SIZE);
@@ -911,7 +1020,83 @@ int main() {
                     read_from_c1 = 1;
                 }
             }
+            
+            
+            if(p1_init && p2_init){
+                int row_shot, col_shot;
+                char start, trash;
+                int result = sscanf(buffer, " %c %d %d %c", &start, &row_shot, &col_shot, &trash);
+                int err = 9999999;
+                
+                if(start != 'S' && start != 'Q')
+                    err = min(err, 102);//invalid packet type
+                
+                if(start == 'S' && result != 3)
+                    err = min(err, 202);//invalid number of parameters (assuming S-type)
+                
+                if(start == 'S' && !(row_shot >= 0 && row_shot < glbl_height && col_shot >= 0 && col_shot < glbl_width))
+                    err = min(err, 400);//cell not in game board (assuming S-type)
 
+                if(start == 'S' && p2->my_shots[row_shot][col_shot])
+                    err = min(err, 401);//cell already guessed (assuming S-type)
+                
+                if(err != 9999999){//there was an error
+                    char tmp_str[999];
+                    snprintf(tmp_str, sizeof(tmp_str), "%d", err);
+
+                    char err_str[999];
+                    strcpy(err_str, "E ");
+                    strcat(err_str, tmp_str);
+
+                    printf("[Server] Enter message for client2: %s\n", err_str);
+                    memset(buffer, 0, BUFFER_SIZE);
+                    send(conn_fd_2, err_str, sizeof(err_str), 0);
+                    
+                    read_from_c1 = 0;
+                    continue;
+                }
+                read_from_c1 = 1;
+                
+                //handling S
+                if(start == 'S'){
+                    int hit = p1->board[row_shot][col_shot];
+                    if(hit){
+                        p2->my_shots[row_shot][col_shot] = 1;//remember the hit as (1)
+                        p1->board[row_shot][col_shot] *= -1;//mark as a hit by negating
+                        int ship_sunk = check_sunk_ship(p1->board, p1->board[row_shot][col_shot]);//search for the same negative number
+                        if(ship_sunk)
+                            p1->num_ships--;//need to handle case of sinking all ships
+                    }
+                    else{
+                        p2->my_shots[row_shot][col_shot] = -1;//remember the miss as (-1)
+                        p1->board[row_shot][col_shot] = 9;//mark as a miss by setting to 9 (water, not a ship)
+                    }
+                    char printout[2] = {hit ? 'H' : 'M', '\0'};
+                    
+                    
+                    char tmp_str[999];
+                    snprintf(tmp_str, sizeof(tmp_str), "%d", p1->num_ships);
+
+                    char msg_str[999];
+                    strcpy(msg_str, "R ");
+                    strcat(msg_str, tmp_str);
+                    strcat(msg_str, printout);
+
+                    printf("[Server] Enter message for client2: %s\n", msg_str);
+                    send(conn_fd_2, msg_str, sizeof(msg_str), 0);
+                    memset(buffer, 0, BUFFER_SIZE);
+
+                    wrote_to_c2 = 1;
+
+                    //VERY LIKELY WRONG
+                    if(p1->num_ships == 0){
+                        send(conn_fd_1, "H 0", 4, 0);
+                        send(conn_fd_2, "H 1", 4, 0);
+                        break;
+                    } 
+                }
+
+            }
             
             
             
