@@ -75,15 +75,21 @@ int main() {
     address_1.sin_addr.s_addr = INADDR_ANY;
     address_1.sin_port = htons(PORT_1);
 
-    if (bind(listen_fd_1, (struct sockaddr *)&address_1, sizeof(address_1)) < 0) {
-        perror("[Server] bind() failed on port 2201");
-        exit(EXIT_FAILURE);
-    }
 
     //socket 2
     address_2.sin_family = AF_INET;
     address_2.sin_addr.s_addr = INADDR_ANY;
     address_2.sin_port = htons(PORT_2);
+
+
+    
+
+    if (bind(listen_fd_1, (struct sockaddr *)&address_1, sizeof(address_1)) < 0) {
+        perror("[Server] bind() failed on port 2201");
+        exit(EXIT_FAILURE);
+    }
+
+    
 
     //socket 2
     if (bind(listen_fd_2, (struct sockaddr *)&address_2, sizeof(address_2)) < 0) {
@@ -566,7 +572,7 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, "E 200", 6, 0);
 
-                    //read_from_c1 = 0
+                    //read_from_c1 = 0;
 
                     continue;
                 }
