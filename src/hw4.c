@@ -159,7 +159,8 @@ int main() {
                 p1_forfeited = 1;
                 printf("[Server] Enter message for client1: H 0\n");
                 memset(buffer, 0, BUFFER_SIZE);
-                send(conn_fd_1, "H 0", 4, 0);
+                if(send(conn_fd_1, "H 0", 4, 0) < 0)
+                    perror("[Server] Failed to send halt packet to forfeiting player.");
                 wrote_to_c1 = 1;
                 //send(conn_fd_2, "H 1", 4, 0);
                 
@@ -533,8 +534,9 @@ int main() {
             int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
 
             if(p1_forfeited){
-                printf("[Server] Enter message for client2: H 1n");
+                printf("[Server] Enter message for client2: H 1\n");
                 send(conn_fd_2, "H 1", 4, 0);
+                    
                 break;
             }
             char start, trash;
@@ -543,7 +545,8 @@ int main() {
                 p2_forfeited = 1;
                 printf("[Server] Enter message for client2: H 0\n");
                 memset(buffer, 0, BUFFER_SIZE);
-                send(conn_fd_2, "H 0", 4, 0);
+                if(send(conn_fd_2, "H 0", 4, 0) < 0)
+                    perror("[Server] Failed to send halt packet to forfeiting player.");
                 //send(conn_fd_1, "H 1", 4, 0);
                 continue;
             }
