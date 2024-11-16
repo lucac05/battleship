@@ -570,6 +570,7 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_1, err_str, sizeof(err_str), 0);
                     continue;
+                    
                 }
                 
                 //handling S
