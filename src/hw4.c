@@ -587,7 +587,7 @@ int main() {
                         p1->my_shots[row_shot][col_shot] = -1;//remember the miss as (-1)
                         p2->board[row_shot][col_shot] = 9;//mark as a miss by setting to 9 (water, not a ship)
                     }
-                    char printout[2] = {hit ? 'H' : 'M', '\0'};
+                    char printout[3] = {' ', hit ? 'H' : 'M', '\0'};
                     
                     
                     
@@ -1071,7 +1071,7 @@ int main() {
                         p2->my_shots[row_shot][col_shot] = -1;//remember the miss as (-1)
                         p1->board[row_shot][col_shot] = 9;//mark as a miss by setting to 9 (water, not a ship)
                     }
-                    char printout[2] = {hit ? 'H' : 'M', '\0'};
+                    char printout[3] = {' ', hit ? 'H' : 'M', '\0'};
                     
                     
                     char tmp_str[999];
