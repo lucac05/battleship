@@ -517,10 +517,10 @@ int main() {
                 }
                 if(err != 9999999){//error code AFTER CHECKING ALL POSSIBEL ONES (incl. 302 & 303)
                     //yes error(s)
-                    char tmp_str[999];
+                    char tmp_str[999] = {0};
                     snprintf(tmp_str, sizeof(tmp_str), "%d", err);
 
-                    char err_str[999];
+                    char err_str[999] = {0};
                     strcpy(err_str, "E ");
                     strcat(err_str, tmp_str);
 
@@ -573,10 +573,10 @@ int main() {
                     err = min(err, 401);//cell already guessed (assuming S-type)
                 
                 if(err != 9999999){//there was an error
-                    char tmp_str[999];
+                    char tmp_str[999] = {0};
                     snprintf(tmp_str, sizeof(tmp_str), "%d", err);
 
-                    char err_str[999];
+                    char err_str[999] = {0};
                     strcpy(err_str, "E ");
                     strcat(err_str, tmp_str);
 
@@ -609,10 +609,10 @@ int main() {
                     
                     
                     
-                    char tmp_str[999];
+                    char tmp_str[999] = {0};
                     snprintf(tmp_str, sizeof(tmp_str), "%d", p2->num_ships);
 
-                    char msg_str[999];
+                    char msg_str[999] = {0};
                     strcpy(msg_str, "R ");
                     strcat(msg_str, tmp_str);
                     strcat(msg_str, printout);
@@ -637,7 +637,7 @@ int main() {
                     //dont check for extraneous params because there's no error message for it
                     char helper_str[99] = {0};
                     snprintf(helper_str, sizeof(helper_str), "%d", p2->num_ships);
-                    char msg_str[999];
+                    char msg_str[999] = {0};
                     strcpy(msg_str, "G ");
                     strcat(msg_str, helper_str);
                     printf("CUR_MSG: %s\n", msg_str);
@@ -1047,10 +1047,10 @@ int main() {
                 }
                 if(err != 9999999){//error code AFTER CHECKING ALL POSSIBEL ONES (incl. 302 & 303)
                     //yes error(s)
-                    char tmp_str[999];
+                    char tmp_str[999] = {0};
                     snprintf(tmp_str, sizeof(tmp_str), "%d", err);
 
-                    char err_str[999];
+                    char err_str[999] = {0};
                     strcpy(err_str, "E ");
                     strcat(err_str, tmp_str);
 
@@ -1106,10 +1106,10 @@ int main() {
                 printf("CURRENT ERROR %d", err);
                 if(err != 9999999){//there was an error
                     printf("ERROR IN BUFFER: %s", buffer);
-                    char tmp_str[999];
+                    char tmp_str[999] = {0};
                     snprintf(tmp_str, sizeof(tmp_str), "%d", err);
 
-                    char err_str[999];
+                    char err_str[999] = {0};
                     strcpy(err_str, "E ");
                     strcat(err_str, tmp_str);
 
@@ -1144,10 +1144,10 @@ int main() {
                     char printout[3] = {' ', hit ? 'H' : 'M', '\0'};
                     
                     
-                    char tmp_str[999];
+                    char tmp_str[999] = {0};
                     snprintf(tmp_str, sizeof(tmp_str), "%d", p1->num_ships);
 
-                    char msg_str[999];
+                    char msg_str[999] = {0};
                     strcpy(msg_str, "R ");
                     strcat(msg_str, tmp_str);
                     strcat(msg_str, printout);
@@ -1172,7 +1172,7 @@ int main() {
                     //dont check for extraneous params because there's no error message for it
                     char helper_str[99] = {0};
                     snprintf(helper_str, sizeof(helper_str), "%d", p1->num_ships);
-                    char msg_str[999];
+                    char msg_str[999] = {0};
                     strcpy(msg_str, "G ");
                     strcat(msg_str, helper_str);
                     printf("CUR_MSG: %s\n", msg_str);
