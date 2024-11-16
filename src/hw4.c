@@ -148,7 +148,7 @@ int main() {
 
             int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
             if (nbytes <= 0) {
-                perror("[Server] read() failed on port 2202");
+                perror("[Server] read() failed on port 2201");
                 exit(EXIT_FAILURE);
             }
 
@@ -608,7 +608,7 @@ int main() {
                 }
             }
             
-            if(p2_joined && p1_init && !p2_init && !wrote_to_c2){
+            if(p2_joined && p1_init && !p2_init /* && !wrote_to_c2*/){
                 char start, trash;
                 int numbers[20] = {-1};
                 int result = sscanf(buffer, " %c %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %c",
@@ -897,7 +897,7 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, err_str, sizeof(err_str), 0);
 
-                    //read_from_c1 = 0;
+                    read_from_c1 = 0;
 
                     continue;
                 }
@@ -908,7 +908,7 @@ int main() {
                     send(conn_fd_2, "A", 2, 0);
                     wrote_to_c2 = 1;
 
-                    //read_from_c1 = 1;
+                    read_from_c1 = 1;
                 }
             }
 
