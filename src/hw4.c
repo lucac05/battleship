@@ -128,12 +128,12 @@ int main() {
 
     int wrote_to_c1 = 0;
     int wrote_to_c2 = 0;
-    int read_from_c1 = 1;
+    //int read_from_c1 = 1;
     int read_from_c2 = 1;
     // Receive and process commands
     while (1) {
         
-        if(conn_fd_1 >= 0 && read_from_c1){
+        if(conn_fd_1 >= 0 /*&& read_from_c1*/){
             memset(buffer, 0, BUFFER_SIZE);
 
             int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
@@ -549,7 +549,7 @@ int main() {
                     send(conn_fd_2, "A", 2, 0);
                     wrote_to_c2 = 1;
 
-                    read_from_c1 = 1;
+                    //read_from_c1 = 1;
 
                 }
                 else if(start != 'B'){
@@ -557,7 +557,7 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, "E 100", 6, 0);
                     
-                    read_from_c1 = 0;
+                    //read_from_c1 = 0;
 
                     continue;
                 }
@@ -566,7 +566,7 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, "E 200", 6, 0);
 
-                    read_from_c1 = 0;
+                    //read_from_c1 = 0;
 
                     continue;
                 }
@@ -861,7 +861,7 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     send(conn_fd_2, err_str, sizeof(err_str), 0);
 
-                    read_from_c1 = 0;
+                    //read_from_c1 = 0;
 
                     continue;
                 }
@@ -872,7 +872,7 @@ int main() {
                     send(conn_fd_2, "A", 2, 0);
                     wrote_to_c2 = 1;
 
-                    read_from_c1 = 1;
+                    //read_from_c1 = 1;
                 }
             }
 
