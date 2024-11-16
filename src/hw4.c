@@ -1021,7 +1021,7 @@ int main() {
             }
             
             
-            if(p1_init && p2_init){
+            if(p1_init && p2_init && !wrote_to_c2){
                 int row_shot, col_shot;
                 char start, trash;
                 int result = sscanf(buffer, " %c %d %d %c", &start, &row_shot, &col_shot, &trash);
@@ -1039,6 +1039,7 @@ int main() {
                     err = min(err, 401);//cell already guessed (assuming S-type)
                 
                 if(err != 9999999){//there was an error
+                    printf("ERROR IN BUFFER: %s", buffer);
                     char tmp_str[999];
                     snprintf(tmp_str, sizeof(tmp_str), "%d", err);
 
