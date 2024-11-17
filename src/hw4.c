@@ -600,7 +600,7 @@ int main() {
                 if(start != 'S' && start != 'Q')
                     err = min(err, 102);//invalid packet type
                 
-                if(start == 'S' && result != 3)
+                if((start == 'S' && result != 3) || (start == 'Q' && result != 1))
                     err = min(err, 202);//invalid number of parameters (assuming S-type)
                 
                 if(start == 'S' && result == 3 && !(row_shot >= 0 && row_shot < glbl_height && col_shot >= 0 && col_shot < glbl_width))
@@ -1186,7 +1186,7 @@ int main() {
                 if(start != 'S' && start != 'Q')
                     err = min(err, 102);//invalid packet type
                 
-                if(start == 'S' && result != 3)
+                if((start == 'S' && result != 3) || (start == 'Q' && result != 1))
                     err = min(err, 202);//invalid number of parameters (assuming S-type)
                 
                 if(start == 'S' && result == 3 && !(row_shot >= 0 && row_shot < glbl_height && col_shot >= 0 && col_shot < glbl_width))
