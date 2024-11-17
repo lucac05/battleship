@@ -313,8 +313,8 @@ int main() {
 
                 if(err == 9999999){//error code BEFORE CHECKING 302 & 303
 
-                    p1 = calloc(1, sizeof(Player));//FREE
-                    p1->board = calloc(board_height, sizeof(int *));//FREE
+                    p1 = malloc(sizeof(Player));//FREE
+                    p1->board = malloc(board_height * sizeof(int *));//FREE
                     for(int i = 0; i < board_height; i++)
                         p1->board[i] = calloc(board_width, sizeof(int));//FREE
 
@@ -561,7 +561,7 @@ int main() {
                     //REMEMBER TO FREE HERE TO ADDRESS MULTIPLE MALLOC
                 }
                 else{
-                    p1->my_shots = calloc(glbl_height, sizeof(int *));//FREE
+                    p1->my_shots = malloc(glbl_height * sizeof(int *));//FREE
                     for(int i = 0; i < board_height; i++)
                         p1->my_shots[i] = calloc(glbl_width, sizeof(int));//FREE
                     
@@ -887,8 +887,8 @@ int main() {
 
                 if(err == 9999999){//error code BEFORE CHECKING 302 & 303
 
-                    p2 = calloc(1, sizeof(Player));//FREE
-                    p2->board = calloc(board_height, sizeof(int *));//FREE
+                    p2 = malloc(sizeof(Player));//FREE
+                    p2->board = malloc(board_height * sizeof(int *));//FREE
                     for(int i = 0; i < board_height; i++)
                         p2->board[i] = calloc(board_width, sizeof(int));//FREE
 
@@ -1134,7 +1134,7 @@ int main() {
                     continue;
                 }
                 else{
-                    p2->my_shots = calloc(glbl_height, sizeof(int *));//FREE
+                    p2->my_shots = malloc(glbl_height * sizeof(int *));//FREE
                     for(int i = 0; i < board_height; i++)
                         p2->my_shots[i] = calloc(glbl_width, sizeof(int));//FREE
                     
