@@ -319,9 +319,9 @@ int main() {
                 if(err == 9999999){//error code BEFORE CHECKING 302 & 303
 
                     p1 = malloc(sizeof(Player));//FREE
-                    p1->board = malloc(board_height * sizeof(int *));//FREE
-                    for(int i = 0; i < board_height; i++)
-                        p1->board[i] = calloc(board_width, sizeof(int));//FREE
+                    p1->board = malloc(glbl_height * sizeof(int *));//FREE
+                    for(int i = 0; i < glbl_height; i++)
+                        p1->board[i] = calloc(glbl_width, sizeof(int));//FREE
 
                     Piece p1_piece_1 = {1, numbers[0], numbers[1], numbers[2], numbers[3]};
                     Piece p1_piece_2 = {2, numbers[4], numbers[5], numbers[6], numbers[7]};
@@ -903,9 +903,9 @@ int main() {
                 if(err == 9999999){//error code BEFORE CHECKING 302 & 303
 
                     p2 = malloc(sizeof(Player));//FREE
-                    p2->board = malloc(board_height * sizeof(int *));//FREE
-                    for(int i = 0; i < board_height; i++)
-                        p2->board[i] = calloc(board_width, sizeof(int));//FREE
+                    p2->board = malloc(glbl_height * sizeof(int *));//FREE
+                    for(int i = 0; i < glbl_height; i++)
+                        p2->board[i] = calloc(glbl_width, sizeof(int));//FREE
 
                     Piece p2_piece_1 = {1, numbers[0], numbers[1], numbers[2], numbers[3]};
                     Piece p2_piece_2 = {2, numbers[4], numbers[5], numbers[6], numbers[7]};
