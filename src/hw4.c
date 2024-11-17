@@ -578,13 +578,13 @@ int main() {
 
 
                     continue;
-                    //REMEMBER TO FREE HERE TO ADDRESS MULTIPLE MALLOC
+                    //REMEMBER TO FREE HERE TO ADDRESS MULTIPLE MALLOC comment
                 }
                 else{
                     char test[100];
                     sprintf(test, "%d %d", glbl_height, glbl_width);
                     send(conn_fd_1, test, sizeof(test), 0);//LEONARDO DA VINCI
-                    
+
                     p1->my_shots = calloc(glbl_height, sizeof(int *));//FREE
                     for(int i = 0; i < board_height; i++)
                         p1->my_shots[i] = calloc(glbl_width, sizeof(int));//FREE
