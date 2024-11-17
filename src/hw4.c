@@ -578,7 +578,7 @@ int main() {
 
 
                     continue;
-                    //REMEMBER TO FREE HERE TO ADDRESS MULTIPLE MALLOC comment
+                    //REMEMBER TO FREE HERE TO ADDRESS MULTIPLE MALLOC comment COMMENT
                 }
                 else{
                     char test[100];
