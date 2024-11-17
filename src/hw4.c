@@ -541,7 +541,8 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     
                     if(err_str[0] == '\0')
-                        memset(err_str, 88, sizeof(err_str));
+                        err_str[0] = 'B';
+                        //memset(err_str, 88, sizeof(err_str));
                     if(send(conn_fd_1, err_str, sizeof(err_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
                     
@@ -604,7 +605,8 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
 
                     if(err_str[0] == '\0')
-                        memset(err_str, 88, sizeof(err_str));
+                        err_str[0] = 'B';
+                        //memset(err_str, 88, sizeof(err_str));
                     if(send(conn_fd_1, err_str, sizeof(err_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
                     continue;
@@ -645,7 +647,8 @@ int main() {
                     printf("strlen(msg_str): %d", strlen(msg_str));
 
                     if(msg_str[0] == '\0')
-                        memset(msg_str, 88, sizeof(msg_str));
+                        msg_str[0] = 'B';
+                        //memset(msg_str, 88, sizeof(msg_str));
                     if(send(conn_fd_1, msg_str, sizeof(msg_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
                     
@@ -695,7 +698,8 @@ int main() {
                     printf("strlen(msg_str): %d", strlen(msg_str));
 
                     if(msg_str[0] == '\0')
-                        memset(msg_str, 88, sizeof(msg_str));
+                        msg_str[0] = 'B';
+                        //memset(msg_str, 88, sizeof(msg_str));
                     if(send(conn_fd_1, msg_str, sizeof(msg_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
                     
@@ -1112,7 +1116,8 @@ int main() {
                     
                     printf("strlen(err_str): %d", strlen(err_str));
                     if(err_str[0] == '\0')
-                        memset(err_str, 88, sizeof(err_str));
+                        err_str[0] = 'B';
+                        //memset(err_str, 88, sizeof(err_str));
                     if(send(conn_fd_2, err_str, sizeof(err_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
                     
@@ -1178,7 +1183,8 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     printf("strlen(err_str): %d", strlen(err_str));
                     if(err_str[0] == '\0')
-                        memset(err_str, 88, sizeof(err_str));
+                        err_str[0] = 'B';
+                        //memset(err_str, 88, sizeof(err_str));
                     if(send(conn_fd_2, err_str, sizeof(err_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
                     
@@ -1221,7 +1227,8 @@ int main() {
                     
                     printf("strlen(msg_str): %d", strlen(msg_str));
                     if(msg_str[0] == '\0')
-                        memset(msg_str, 88, sizeof(msg_str));
+                        msg_str[0] = 'B';
+                        //memset(msg_str, 88, sizeof(msg_str));
                     if(send(conn_fd_2, msg_str, sizeof(msg_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
                     memset(buffer, 0, BUFFER_SIZE);
@@ -1271,7 +1278,8 @@ int main() {
                     
                     printf("strlen(msg_str): %d", strlen(msg_str));
                     if(msg_str[0] == '\0')
-                        memset(msg_str, 88, sizeof(msg_str));
+                        msg_str[0] = 'B';
+                        //memset(msg_str, 88, sizeof(msg_str));
                     if(send(conn_fd_2, msg_str, sizeof(msg_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
                     memset(buffer, 0, BUFFER_SIZE);
