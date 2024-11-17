@@ -341,12 +341,12 @@ int main() {
                         if(cur.type == 1){//square
                             if(!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1)){//square goes out of bounds
                                 err = min(err, 302);
-                                break;
+                                continue;
                             }
                             //checking for overlap
                             if(!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 1, col_index + 1)){//square goes out of bounds
                                 err = min(err, 303);
-                                break;//now what?
+                                continue;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             p1->board[row_index][col_index] = cur.my_number;
@@ -357,12 +357,12 @@ int main() {
                         else if(cur.type == 2){//line
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 2, col_index) || !check_fit(row_index + 3, col_index))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2) || !check_fit(row_index, col_index + 3)))){//line goes out of boudns
                                 err = min(err, 302);
-                                break;
+                                continue;//CHANGED THIS
                             }
                             //checking for overlap
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 2, col_index) || !check_available(p1->board, row_index + 3, col_index))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index, col_index + 2) || !check_available(p1->board, row_index, col_index + 3)))){//line goes out of boudns
                                 err = min(err, 303);
-                                break;//now what?
+                                continue;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1 || cur.rotation == 3){
@@ -381,12 +381,12 @@ int main() {
                         else if(cur.type == 3){//3_zig
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index - 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 2, col_index + 1)))){//zig goes out of boudds
                                 err = min(err, 302);
-                                break;
+                                continue;
                             }
                             //checking for overlap
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 2, col_index + 1)))){
                                 err = min(err, 303);
-                                break;//now what?
+                                continue;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1 || cur.rotation == 3){
@@ -405,12 +405,12 @@ int main() {
                         else if(cur.type == 4){//L
                             if((cur.rotation == 1 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 2, col_index) || !check_fit(row_index + 2, col_index + 1))) || (cur.rotation == 2 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2))) || (cur.rotation == 3 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 2, col_index + 1))) || (cur.rotation == 4 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2) || !check_fit(row_index - 1, col_index + 2)))){//L goes out of boudds
                                 err = min(err, 302);
-                                break;
+                                continue;
                             }
                             //checking for overlap
                             if((cur.rotation == 1 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 2, col_index) || !check_available(p1->board, row_index + 2, col_index + 1))) || (cur.rotation == 2 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index, col_index + 2))) || (cur.rotation == 3 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 2, col_index + 1))) || (cur.rotation == 4 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index, col_index + 2) || !check_available(p1->board, row_index - 1, col_index + 2)))){
                                 err = min(err, 303);
-                                break;//now what?
+                                continue;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1){
@@ -441,12 +441,12 @@ int main() {
                         else if(cur.type == 5){//5_zig
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1)))){//zig goes out of boudds
                                 err = min(err, 302);
-                                break;
+                                continue;
                             }
                             //checking for overlap
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1)))){//zig goes out of boudds
                                 err = min(err, 303);
-                                break;//now what?
+                                continue;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1 || cur.rotation == 3){
@@ -465,12 +465,12 @@ int main() {
                         else if(cur.type == 6){//new-L
                             if((cur.rotation == 1 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index - 2, col_index + 1))) || (cur.rotation == 2 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 1, col_index + 2))) || (cur.rotation == 3 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 2, col_index))) || (cur.rotation == 4 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2) || !check_fit(row_index + 1, col_index + 2)))){//L goes out of boudds
                                 err = min(err, 302);
-                                break;
+                                continue;
                             }
                             //checking for overlap
                             if((cur.rotation == 1 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1) || !check_available(p1->board, row_index - 2, col_index + 1))) || (cur.rotation == 2 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 2))) || (cur.rotation == 3 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 2, col_index))) || (cur.rotation == 4 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index, col_index + 2) || !check_available(p1->board, row_index + 1, col_index + 2)))){
                                 err = min(err, 303);
-                                break;//now what?
+                                continue;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1){
@@ -501,12 +501,12 @@ int main() {
                         else if(cur.type == 7){//T
                             if((cur.rotation == 1 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index, col_index + 2))) || (cur.rotation == 2 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index + 1, col_index + 1))) || (cur.rotation == 3 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index, col_index + 2))) || (cur.rotation == 4 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 2, col_index)))){//L goes out of boudds
                                 err = min(err, 302);
-                                break;
+                                continue;
                             }
                             //checking for overlap
                             if((cur.rotation == 1 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index, col_index + 2))) || (cur.rotation == 2 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 1))) || (cur.rotation == 3 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1) || !check_available(p1->board, row_index, col_index + 2))) || (cur.rotation == 4 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 2, col_index)))){
                                 err = min(err, 303);
-                                break;//now what?
+                                continue;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1){
@@ -618,8 +618,8 @@ int main() {
                     err = min(err, 401);//cell already guessed (assuming S-type)
                 
                 if(err != 9999999){//there was an error
-                    if(err == 303)
-                        send(conn_fd_1, buffer, strlen(buffer), 0);//EZIO AUDITORE
+                    //if(err == 303)
+                    //    send(conn_fd_1, buffer, strlen(buffer), 0);//EZIO AUDITORE
                     char tmp_str[999] = {0};
                     snprintf(tmp_str, sizeof(tmp_str), "%d", err);
 
@@ -940,12 +940,12 @@ int main() {
                         if(cur.type == 1){//square
                             if(!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1)){//square goes out of bounds
                                 err = min(err, 302); 
-                                break;
+                                continue;
                             }
                             //checking for overlap
                             if(!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 1, col_index + 1)){//square goes out of bounds
                                 err = min(err, 303);
-                                break;//now what?
+                                continue;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             p2->board[row_index][col_index] = cur.my_number;
@@ -956,12 +956,12 @@ int main() {
                         else if(cur.type == 2){//line
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 2, col_index) || !check_fit(row_index + 3, col_index))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2) || !check_fit(row_index, col_index + 3)))){//line goes out of boudns
                                 err = min(err, 302);
-                                break;
+                                continue;
                             }
                             //checking for overlap
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 2, col_index) || !check_available(p2->board, row_index + 3, col_index))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index, col_index + 2) || !check_available(p2->board, row_index, col_index + 3)))){//line goes out of boudns
                                 err = min(err, 303);
-                                break;//now what?
+                                continue;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1 || cur.rotation == 3){
@@ -980,12 +980,12 @@ int main() {
                         else if(cur.type == 3){//3_zig
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index - 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 2, col_index + 1)))){//zig goes out of boudds
                                 err = min(err, 302);
-                                break;
+                                continue;
                             }
                             //checking for overlap
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 2, col_index + 1)))){
                                 err = min(err, 303);
-                                break;//now what?
+                                continue;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1 || cur.rotation == 3){
@@ -1004,12 +1004,12 @@ int main() {
                         else if(cur.type == 4){//L
                             if((cur.rotation == 1 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 2, col_index) || !check_fit(row_index + 2, col_index + 1))) || (cur.rotation == 2 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2))) || (cur.rotation == 3 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 2, col_index + 1))) || (cur.rotation == 4 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2) || !check_fit(row_index - 1, col_index + 2)))){//L goes out of boudds
                                 err = min(err, 302);
-                                break;
+                                continue;
                             }
                             //checking for overlap
                             if((cur.rotation == 1 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 2, col_index) || !check_available(p2->board, row_index + 2, col_index + 1))) || (cur.rotation == 2 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index, col_index + 2))) || (cur.rotation == 3 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 2, col_index + 1))) || (cur.rotation == 4 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index, col_index + 2) || !check_available(p2->board, row_index - 1, col_index + 2)))){
                                 err = min(err, 303);
-                                break;//now what?
+                                continue;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1){
@@ -1040,12 +1040,12 @@ int main() {
                         else if(cur.type == 5){//5_zig
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1)))){//zig goes out of boudds
                                 err = min(err, 302);
-                                break;
+                                continue;
                             }
                             //checking for overlap
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1)))){//zig goes out of boudds
                                 err = min(err, 303);
-                                break;//now what?
+                                continue;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1 || cur.rotation == 3){
@@ -1064,12 +1064,12 @@ int main() {
                         else if(cur.type == 6){//new-L
                             if((cur.rotation == 1 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index - 2, col_index + 1))) || (cur.rotation == 2 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 1, col_index + 2))) || (cur.rotation == 3 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 2, col_index))) || (cur.rotation == 4 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2) || !check_fit(row_index + 1, col_index + 2)))){//L goes out of boudds
                                 err = min(err, 302);
-                                break;
+                                continue;
                             }
                             //checking for overlap
                             if((cur.rotation == 1 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1) || !check_available(p2->board, row_index - 2, col_index + 1))) || (cur.rotation == 2 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 2))) || (cur.rotation == 3 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 2, col_index))) || (cur.rotation == 4 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index, col_index + 2) || !check_available(p2->board, row_index + 1, col_index + 2)))){
                                 err = min(err, 303);
-                                break;//now what?
+                                continue;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1){
@@ -1100,12 +1100,12 @@ int main() {
                         else if(cur.type == 7){//T
                             if((cur.rotation == 1 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index, col_index + 2))) || (cur.rotation == 2 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index + 1, col_index + 1))) || (cur.rotation == 3 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index, col_index + 2))) || (cur.rotation == 4 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 2, col_index)))){//L goes out of boudds
                                 err = min(err, 302);
-                                break;
+                                continue;
                             }
                             //checking for overlap
                             if((cur.rotation == 1 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index, col_index + 2))) || (cur.rotation == 2 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 1))) || (cur.rotation == 3 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1) || !check_available(p2->board, row_index, col_index + 2))) || (cur.rotation == 4 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 2, col_index)))){
                                 err = min(err, 303);
-                                break;//now what?
+                                continue;//now what?
                             }
                             //adding the ships to the board after ensuring all is well
                             if(cur.rotation == 1){
@@ -1141,8 +1141,8 @@ int main() {
                 }
                 if(err != 9999999){//error code AFTER CHECKING ALL POSSIBEL ONES (incl. 302 & 303)
                     //yes error(s)
-                    if(err == 303)
-                        send(conn_fd_2, buffer, strlen(buffer), 0);//EZIO AUDITORE
+                    //if(err == 303)
+                    //    send(conn_fd_2, buffer, strlen(buffer), 0);//EZIO AUDITORE
                     char tmp_str[999] = {0};
                     snprintf(tmp_str, sizeof(tmp_str), "%d", err);
 
