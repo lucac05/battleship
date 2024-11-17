@@ -581,7 +581,10 @@ int main() {
                     //REMEMBER TO FREE HERE TO ADDRESS MULTIPLE MALLOC
                 }
                 else{
-                    send(conn_fd_1, buffer, strlen(buffer), 0);//LEONARDO DA VINCI
+                    char test[100];
+                    sprintf(test, "%d %d", glbl_height, glbl_width);
+                    send(conn_fd_1, test, sizeof(test), 0);//LEONARDO DA VINCI
+                    
                     p1->my_shots = calloc(glbl_height, sizeof(int *));//FREE
                     for(int i = 0; i < board_height; i++)
                         p1->my_shots[i] = calloc(glbl_width, sizeof(int));//FREE
@@ -837,10 +840,11 @@ int main() {
                     continue;
                 }
                 else{
+                    char test[100];
+                    sprintf(test, "%d %d", glbl_height, glbl_width);
+                    send(conn_fd_2, test, sizeof(test), 0);//LEONARDO DA VINCI
 
-                    send(conn_fd_2, buffer, strlen(buffer), 0);//LEONARDO DA VINCI
-
-                    printf("[Server] Enter message for client2: E 200\n");//should be E 100 ?
+                    printf("[Server] Enter message for client2: E 200\n");//should be E 100 ? new comment
                     memset(buffer, 0, BUFFER_SIZE);
                     if(send(conn_fd_2, "E 200", 6, 0) < 0)
                         perror("[Server] Failed to send packet to player.");
