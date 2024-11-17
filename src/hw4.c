@@ -355,11 +355,12 @@ int main() {
                             p1->board[row_index + 1][col_index + 1] = cur.my_number;
                         }
                         else if(cur.type == 2){//line
-                            if(((cur.rotation == 1 || cur.rotation == 3) && row_index + 3 >= board_height) || ((cur.rotation == 2 || cur.rotation == 4) && col_index + 3 >= board_width)){//line goes out of boudns
+                            if(((cur.rotation == 1 || cur.rotation == 3) && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 2, col_index) || !check_fit(row_index + 3, col_index))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2) || !check_fit(row_index, col_index + 3)))){//line goes out of boudns
                                 err = min(err, 302);
+                                break;
                             }
                             //checking for overlap
-                            if(((cur.rotation == 1 || cur.rotation == 3) && (p1->board[row_index][col_index] != 0 || p1->board[row_index + 1][col_index] != 0 || p1->board[row_index + 2][col_index] != 0 || p1->board[row_index + 3][col_index] != 0)) || ((cur.rotation == 2 || cur.rotation == 4) && (p1->board[row_index][col_index] != 0 || p1->board[row_index][col_index + 1] != 0 || p1->board[row_index][col_index + 2] != 0 || p1->board[row_index][col_index + 3] != 0))){
+                            if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 2, col_index) || !check_available(p1->board, row_index + 3, col_index))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index, col_index + 2) || !check_available(p1->board, row_index, col_index + 3)))){//line goes out of boudns
                                 err = min(err, 303);
                                 break;//now what?
                             }
@@ -380,6 +381,7 @@ int main() {
                         else if(cur.type == 3){//3_zig
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index - 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 2, col_index + 1)))){//zig goes out of boudds
                                 err = min(err, 302);
+                                break;
                             }
                             //checking for overlap
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 2, col_index + 1)))){
@@ -403,6 +405,7 @@ int main() {
                         else if(cur.type == 4){//L
                             if((cur.rotation == 1 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 2, col_index) || !check_fit(row_index + 2, col_index + 1))) || (cur.rotation == 2 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2))) || (cur.rotation == 3 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 2, col_index + 1))) || (cur.rotation == 4 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2) || !check_fit(row_index - 1, col_index + 2)))){//L goes out of boudds
                                 err = min(err, 302);
+                                break;
                             }
                             //checking for overlap
                             if((cur.rotation == 1 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 2, col_index) || !check_available(p1->board, row_index + 2, col_index + 1))) || (cur.rotation == 2 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index, col_index + 2))) || (cur.rotation == 3 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 2, col_index + 1))) || (cur.rotation == 4 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index, col_index + 2) || !check_available(p1->board, row_index - 1, col_index + 2)))){
@@ -438,6 +441,7 @@ int main() {
                         else if(cur.type == 5){//5_zig
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1)))){//zig goes out of boudds
                                 err = min(err, 302);
+                                break;
                             }
                             //checking for overlap
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1)))){//zig goes out of boudds
@@ -461,6 +465,7 @@ int main() {
                         else if(cur.type == 6){//new-L
                             if((cur.rotation == 1 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index - 2, col_index + 1))) || (cur.rotation == 2 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 1, col_index + 2))) || (cur.rotation == 3 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 2, col_index))) || (cur.rotation == 4 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2) || !check_fit(row_index + 1, col_index + 2)))){//L goes out of boudds
                                 err = min(err, 302);
+                                break;
                             }
                             //checking for overlap
                             if((cur.rotation == 1 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1) || !check_available(p1->board, row_index - 2, col_index + 1))) || (cur.rotation == 2 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 2))) || (cur.rotation == 3 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 2, col_index))) || (cur.rotation == 4 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index, col_index + 2) || !check_available(p1->board, row_index + 1, col_index + 2)))){
@@ -496,6 +501,7 @@ int main() {
                         else if(cur.type == 7){//T
                             if((cur.rotation == 1 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index, col_index + 2))) || (cur.rotation == 2 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index + 1, col_index + 1))) || (cur.rotation == 3 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index, col_index + 2))) || (cur.rotation == 4 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 2, col_index)))){//L goes out of boudds
                                 err = min(err, 302);
+                                break;
                             }
                             //checking for overlap
                             if((cur.rotation == 1 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index, col_index + 2))) || (cur.rotation == 2 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1) || !check_available(p1->board, row_index + 1, col_index + 1))) || (cur.rotation == 3 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index - 1, col_index + 1) || !check_available(p1->board, row_index, col_index + 2))) || (cur.rotation == 4 && (!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 1, col_index + 1) || !check_available(p1->board, row_index + 2, col_index)))){
@@ -529,8 +535,6 @@ int main() {
                             }
                         }
                         
-
-                       
                     }
 
                 }
@@ -940,11 +944,12 @@ int main() {
                             p2->board[row_index + 1][col_index + 1] = cur.my_number;
                         }
                         else if(cur.type == 2){//line
-                            if(((cur.rotation == 1 || cur.rotation == 3) && row_index + 3 >= board_height) || ((cur.rotation == 2 || cur.rotation == 4) && col_index + 3 >= board_width)){//line goes out of boudns
+                            if(((cur.rotation == 1 || cur.rotation == 3) && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 2, col_index) || !check_fit(row_index + 3, col_index))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2) || !check_fit(row_index, col_index + 3)))){//line goes out of boudns
                                 err = min(err, 302);
+                                break;
                             }
                             //checking for overlap
-                            if(((cur.rotation == 1 || cur.rotation == 3) && (p2->board[row_index][col_index] != 0 || p2->board[row_index + 1][col_index] != 0 || p2->board[row_index + 2][col_index] != 0 || p2->board[row_index + 3][col_index] != 0)) || ((cur.rotation == 2 || cur.rotation == 4) && (p2->board[row_index][col_index] != 0 || p2->board[row_index][col_index + 1] != 0 || p2->board[row_index][col_index + 2] != 0 || p2->board[row_index][col_index + 3] != 0))){
+                            if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 2, col_index) || !check_available(p2->board, row_index + 3, col_index))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index, col_index + 2) || !check_available(p2->board, row_index, col_index + 3)))){//line goes out of boudns
                                 err = min(err, 303);
                                 break;//now what?
                             }
@@ -965,6 +970,7 @@ int main() {
                         else if(cur.type == 3){//3_zig
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index - 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 2, col_index + 1)))){//zig goes out of boudds
                                 err = min(err, 302);
+                                break;
                             }
                             //checking for overlap
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 2, col_index + 1)))){
@@ -988,6 +994,7 @@ int main() {
                         else if(cur.type == 4){//L
                             if((cur.rotation == 1 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 2, col_index) || !check_fit(row_index + 2, col_index + 1))) || (cur.rotation == 2 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2))) || (cur.rotation == 3 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 2, col_index + 1))) || (cur.rotation == 4 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2) || !check_fit(row_index - 1, col_index + 2)))){//L goes out of boudds
                                 err = min(err, 302);
+                                break;
                             }
                             //checking for overlap
                             if((cur.rotation == 1 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 2, col_index) || !check_available(p2->board, row_index + 2, col_index + 1))) || (cur.rotation == 2 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index, col_index + 2))) || (cur.rotation == 3 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 2, col_index + 1))) || (cur.rotation == 4 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index, col_index + 2) || !check_available(p2->board, row_index - 1, col_index + 2)))){
@@ -1023,6 +1030,7 @@ int main() {
                         else if(cur.type == 5){//5_zig
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1)))){//zig goes out of boudds
                                 err = min(err, 302);
+                                break;
                             }
                             //checking for overlap
                             if(((cur.rotation == 1 || cur.rotation == 3) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 2))) || ((cur.rotation == 2 || cur.rotation == 4) && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1)))){//zig goes out of boudds
@@ -1046,6 +1054,7 @@ int main() {
                         else if(cur.type == 6){//new-L
                             if((cur.rotation == 1 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index - 2, col_index + 1))) || (cur.rotation == 2 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 1, col_index + 2))) || (cur.rotation == 3 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 2, col_index))) || (cur.rotation == 4 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index, col_index + 2) || !check_fit(row_index + 1, col_index + 2)))){//L goes out of boudds
                                 err = min(err, 302);
+                                break;
                             }
                             //checking for overlap
                             if((cur.rotation == 1 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1) || !check_available(p2->board, row_index - 2, col_index + 1))) || (cur.rotation == 2 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 2))) || (cur.rotation == 3 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 2, col_index))) || (cur.rotation == 4 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index, col_index + 2) || !check_available(p2->board, row_index + 1, col_index + 2)))){
@@ -1081,6 +1090,7 @@ int main() {
                         else if(cur.type == 7){//T
                             if((cur.rotation == 1 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index, col_index + 2))) || (cur.rotation == 2 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index + 1, col_index + 1))) || (cur.rotation == 3 && (!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index - 1, col_index + 1) || !check_fit(row_index, col_index + 2))) || (cur.rotation == 4 && (!check_fit(row_index, col_index) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1) || !check_fit(row_index + 2, col_index)))){//L goes out of boudds
                                 err = min(err, 302);
+                                break;
                             }
                             //checking for overlap
                             if((cur.rotation == 1 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index, col_index + 2))) || (cur.rotation == 2 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1) || !check_available(p2->board, row_index + 1, col_index + 1))) || (cur.rotation == 3 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index - 1, col_index + 1) || !check_available(p2->board, row_index, col_index + 2))) || (cur.rotation == 4 && (!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 1, col_index + 1) || !check_available(p2->board, row_index + 2, col_index)))){
