@@ -581,6 +581,7 @@ int main() {
                     //REMEMBER TO FREE HERE TO ADDRESS MULTIPLE MALLOC
                 }
                 else{
+                    send(conn_fd_1, buffer, strlen(buffer), 0);//LEONARDO DA VINCI
                     p1->my_shots = calloc(glbl_height, sizeof(int *));//FREE
                     for(int i = 0; i < board_height; i++)
                         p1->my_shots[i] = calloc(glbl_width, sizeof(int));//FREE
@@ -836,6 +837,9 @@ int main() {
                     continue;
                 }
                 else{
+
+                    send(conn_fd_2, buffer, strlen(buffer), 0);//LEONARDO DA VINCI
+
                     printf("[Server] Enter message for client2: E 200\n");//should be E 100 ?
                     memset(buffer, 0, BUFFER_SIZE);
                     if(send(conn_fd_2, "E 200", 6, 0) < 0)
