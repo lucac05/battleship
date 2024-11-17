@@ -339,11 +339,12 @@ int main() {
                         int col_index = cur.start_col;
 
                         if(cur.type == 1){//square
-                            if(row_index + 1 >= board_height || cur.start_col + 1 >= board_width){//square goes out of bounds
-                                err = min(err, 302); 
+                            if(!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1)){//square goes out of bounds
+                                err = min(err, 302);
+                                break;
                             }
                             //checking for overlap
-                            if(p1->board[row_index][col_index] != 0 || p1->board[row_index][col_index + 1] != 0 || p1->board[row_index + 1][col_index] != 0 ||p1->board[row_index + 1][col_index + 1] != 0){
+                            if(!check_available(p1->board, row_index, col_index) || !check_available(p1->board, row_index, col_index + 1) || !check_available(p1->board, row_index + 1, col_index) || !check_available(p1->board, row_index + 1, col_index + 1)){//square goes out of bounds
                                 err = min(err, 303);
                                 break;//now what?
                             }
@@ -923,11 +924,12 @@ int main() {
                         int col_index = cur.start_col;
 
                         if(cur.type == 1){//square
-                            if(row_index + 1 >= board_height || cur.start_col + 1 >= board_width){//square goes out of bounds
+                            if(!check_fit(row_index, col_index) || !check_fit(row_index, col_index + 1) || !check_fit(row_index + 1, col_index) || !check_fit(row_index + 1, col_index + 1)){//square goes out of bounds
                                 err = min(err, 302); 
+                                break;
                             }
                             //checking for overlap
-                            if(p2->board[row_index][col_index] != 0 || p2->board[row_index][col_index + 1] != 0 || p2->board[row_index + 1][col_index] != 0 ||p2->board[row_index + 1][col_index + 1] != 0){
+                            if(!check_available(p2->board, row_index, col_index) || !check_available(p2->board, row_index, col_index + 1) || !check_available(p2->board, row_index + 1, col_index) || !check_available(p2->board, row_index + 1, col_index + 1)){//square goes out of bounds
                                 err = min(err, 303);
                                 break;//now what?
                             }
