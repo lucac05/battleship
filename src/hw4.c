@@ -178,6 +178,11 @@ int main() {
             int nbytes = read(conn_fd_1, buffer, BUFFER_SIZE);
             if (nbytes <= 0) {
                 perror("[Server] read() failed on port 2201");
+                //should this be here?
+                close(conn_fd_1);
+                close(conn_fd_2);
+                close(listen_fd_1);
+                close(listen_fd_2);
                 exit(EXIT_FAILURE);
             }
 
@@ -720,6 +725,10 @@ int main() {
             int nbytes = read(conn_fd_2, buffer, BUFFER_SIZE);
             if (nbytes <= 0) {
                 perror("[Server] read() failed on port 2202");
+                close(conn_fd_1);
+                close(conn_fd_2);
+                close(listen_fd_1);
+                close(listen_fd_2);
                 exit(EXIT_FAILURE);
             }
 
