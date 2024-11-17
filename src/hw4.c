@@ -9,6 +9,10 @@
 #define PORT_1 2201
 #define PORT_2 2202
 #define BUFFER_SIZE 1024
+
+
+
+
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
 typedef struct Piece{
@@ -31,7 +35,8 @@ typedef struct Player{
 } Player;
 
 
-
+//global string
+char *ENTER_TEXT = "BANANAS";
 
 int glbl_height, glbl_width;
 
@@ -541,7 +546,7 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     
                     if(err_str[0] == '\0')
-                        err_str[0] = 'L';
+                        strcpy(err_str, ENTER_TEXT);
                         //memset(err_str, 88, sizeof(err_str));
                     if(send(conn_fd_1, err_str, strlen(err_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -605,7 +610,7 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
 
                     if(err_str[0] == '\0')
-                        err_str[0] = 'L';
+                        strcpy(err_str, ENTER_TEXT);
                         //memset(err_str, 88, sizeof(err_str));
                     if(send(conn_fd_1, err_str, strlen(err_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -647,7 +652,7 @@ int main() {
                     printf("strlen(msg_str): %d", strlen(msg_str));
 
                     if(msg_str[0] == '\0')
-                        msg_str[0] = 'L';
+                        strcpy(msg_str, ENTER_TEXT);
                         //memset(msg_str, 88, sizeof(msg_str));
                     if(send(conn_fd_1, msg_str, strlen(msg_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -698,7 +703,7 @@ int main() {
                     printf("strlen(msg_str): %d", strlen(msg_str));
 
                     if(msg_str[0] == '\0')
-                        msg_str[0] = 'L';
+                        strcpy(msg_str, ENTER_TEXT);
                         //memset(msg_str, 88, sizeof(msg_str));
                     if(send(conn_fd_1, msg_str, strlen(msg_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -1116,7 +1121,7 @@ int main() {
                     
                     printf("strlen(err_str): %d", strlen(err_str));
                     if(err_str[0] == '\0')
-                        err_str[0] = 'L';
+                        strcpy(err_str, ENTER_TEXT);
                         //memset(err_str, 88, sizeof(err_str));
                     if(send(conn_fd_2, err_str, strlen(err_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -1183,7 +1188,7 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     printf("strlen(err_str): %d", strlen(err_str));
                     if(err_str[0] == '\0')
-                        err_str[0] = 'L';
+                        strcpy(err_str, ENTER_TEXT);
                         //memset(err_str, 88, sizeof(err_str));
                     if(send(conn_fd_2, err_str, strlen(err_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -1227,7 +1232,7 @@ int main() {
                     
                     printf("strlen(msg_str): %d", strlen(msg_str));
                     if(msg_str[0] == '\0')
-                        msg_str[0] = 'L';
+                        strcpy(msg_str, ENTER_TEXT);
                         //memset(msg_str, 88, sizeof(msg_str));
                     if(send(conn_fd_2, msg_str, strlen(msg_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -1278,7 +1283,7 @@ int main() {
                     
                     printf("strlen(msg_str): %d", strlen(msg_str));
                     if(msg_str[0] == '\0')
-                        msg_str[0] = 'L';
+                        strcpy(msg_str, ENTER_TEXT);
                         //memset(msg_str, 88, sizeof(msg_str));
                     if(send(conn_fd_2, msg_str, strlen(msg_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
