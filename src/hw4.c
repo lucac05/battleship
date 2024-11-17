@@ -313,8 +313,8 @@ int main() {
 
                 if(err == 9999999){//error code BEFORE CHECKING 302 & 303
 
-                    p1 = malloc(sizeof(Player));//FREE
-                    p1->board = malloc(sizeof(int *) * board_height);//FREE
+                    p1 = calloc(1, sizeof(Player));//FREE
+                    p1->board = calloc(board_height, sizeof(int *));//FREE
                     for(int i = 0; i < board_height; i++)
                         p1->board[i] = calloc(board_width, sizeof(int));//FREE
 
@@ -557,7 +557,7 @@ int main() {
                     //REMEMBER TO FREE HERE TO ADDRESS MULTIPLE MALLOC
                 }
                 else{
-                    p1->my_shots = malloc(sizeof(int *) * glbl_height);//FREE
+                    p1->my_shots = calloc(glbl_height, sizeof(int *));//FREE
                     for(int i = 0; i < board_height; i++)
                         p1->my_shots[i] = calloc(glbl_width, sizeof(int));//FREE
                     
@@ -869,8 +869,8 @@ int main() {
 
                 if(err == 9999999){//error code BEFORE CHECKING 302 & 303
 
-                    p2 = malloc(sizeof(Player));//FREE
-                    p2->board = malloc(sizeof(int *) * board_height);//FREE
+                    p2 = calloc(1, sizeof(Player));//FREE
+                    p2->board = calloc(board_height, sizeof(int *));//FREE
                     for(int i = 0; i < board_height; i++)
                         p2->board[i] = calloc(board_width, sizeof(int));//FREE
 
@@ -1111,7 +1111,7 @@ int main() {
                     continue;
                 }
                 else{
-                    p2->my_shots = malloc(sizeof(int *) * glbl_height);//FREE
+                    p2->my_shots = calloc(glbl_height, sizeof(int *));//FREE
                     for(int i = 0; i < board_height; i++)
                         p2->my_shots[i] = calloc(glbl_width, sizeof(int));//FREE
                     
@@ -1295,17 +1295,27 @@ int main() {
     }
 
     for(int i = 0; i < glbl_height; i++){
-        free(p1->board[i]);
-        free(p1->my_shots[i]);
-        free(p2->board[i]);
-        free(p2->my_shots[i]);
+        if(p1 && p1->board && p1->board[i])
+            free(p1->board[i]);
+        if(p1 && p1->my_shots && p1->my_shots[i])
+            free(p1->my_shots[i]);
+        if(p2 && p2->board && p2->board[i])
+            free(p2->board[i]);
+        if(p2 && p2->my_shots && p2->my_shots[i])
+            free(p2->my_shots[i]);
     }
-    free(p1->board);
-    free(p1->my_shots);
-    free(p2->board);
-    free(p2->my_shots);
-    free(p1);
-    free(p2);
+    if(p1 && p1->board)
+        free(p1->board);
+    if(p1 && p1->my_shots)
+        free(p1->my_shots);
+    if(p1)
+        free(p1);
+    if(p2 && p2->board)
+        free(p2->board);
+    if(p2 && p2->my_shots)
+        free(p2->my_shots);
+    if(p2)
+        free(p2);
     p1 = NULL;
     p2 = NULL;
 
