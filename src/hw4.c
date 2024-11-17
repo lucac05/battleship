@@ -614,6 +614,8 @@ int main() {
                     err = min(err, 401);//cell already guessed (assuming S-type)
                 
                 if(err != 9999999){//there was an error
+                    if(err == 303)
+                        send(conn_fd_1, buffer, strlen(buffer), 0);//EZIO AUDITORE
                     char tmp_str[999] = {0};
                     snprintf(tmp_str, sizeof(tmp_str), "%d", err);
 
@@ -1131,6 +1133,8 @@ int main() {
                 }
                 if(err != 9999999){//error code AFTER CHECKING ALL POSSIBEL ONES (incl. 302 & 303)
                     //yes error(s)
+                    if(err == 303)
+                        send(conn_fd_2, buffer, strlen(buffer), 0);//EZIO AUDITORE
                     char tmp_str[999] = {0};
                     snprintf(tmp_str, sizeof(tmp_str), "%d", err);
 
