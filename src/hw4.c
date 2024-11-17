@@ -1130,11 +1130,11 @@ int main() {
                     read_from_c1 = 0;
 
 
-                    /*for(int i = 0; i < glbl_height; i++)
+                    for(int i = 0; i < glbl_height; i++)
                         free(p2->board[i]);
                     free(p2->board);
                     free(p2);
-                    p2 = NULL;*/
+                    p2 = NULL;
 
                     continue;
                 }
