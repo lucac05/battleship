@@ -167,8 +167,8 @@ int main() {
     int p1_shot = 0;
     int p2_shot = 0;
 
-    Player *p1;
-    Player *p2;
+    Player *p1 = NULL;
+    Player *p2 = NULL;
     // Receive and process commands
     while (1) {
         
