@@ -1170,7 +1170,7 @@ int main() {
                 char start, trash;
                 int result = sscanf(buffer, " %c %d %d %c", &start, &row_shot, &col_shot, &trash);
                 int err = 9999999;
-                printf("HERE ONCE");
+                
                 if(start != 'S' && start != 'Q')
                     err = min(err, 102);//invalid packet type
                 
@@ -1182,9 +1182,9 @@ int main() {
                 else if(start == 'S' && result == 3 && p2->my_shots[row_shot][col_shot])
                     err = min(err, 401);//cell already guessed (assuming S-type)
                 
-                printf("CURRENT ERROR %d", err);
+                
                 if(err != 9999999){//there was an error
-                    printf("ERROR IN BUFFER: %s", buffer);
+                    
                     char tmp_str[999] = {0};
                     snprintf(tmp_str, sizeof(tmp_str), "%d", err);
 
@@ -1262,7 +1262,7 @@ int main() {
                     char msg_str[999] = {0};
                     strcpy(msg_str, "G ");
                     strcat(msg_str, helper_str);
-                    printf("CUR_MSG: %s\n", msg_str);
+                    
 
                     for(int r = 0; r < glbl_height; r++){
                         for(int c = 0; c < glbl_width; c++){
@@ -1284,7 +1284,7 @@ int main() {
                 
                     printf("[Server] Enter message for client2: %s\n", msg_str);
                     
-                    printf("strlen(msg_str): %d", strlen(msg_str));
+                    
                     
                     if(send(conn_fd_2, msg_str, strlen(msg_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -1293,10 +1293,10 @@ int main() {
                     continue;//still p2's turn so skip p1
 
                 }
-                else{
+                /*else{
                     for(int i = 0; i < 1000; i++)
                         printf("How did we get here?");
-                }
+                }*/
 
             }
             
