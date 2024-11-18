@@ -59,8 +59,8 @@ int check_sunk_ship(int **board, int target){
     }
     if(count == 4)
         return 1;//ship sunk (all 4 pieces hit)
-    if(count > 4 || count < 0)
-        return -999;//bad things happened
+    /*if(count > 4 || count < 0)
+        return -999;//bad things happened*/
     return 0;//ship not sunk
     
 }
@@ -163,7 +163,7 @@ int main() {
     int wrote_to_c1 = 0;
     int wrote_to_c2 = 0;
     int read_from_c1 = 1;
-    int read_from_c2 = 1;
+    //int read_from_c2 = 1;
 
     int p1_forfeited = 0;
     int p2_forfeited = 0;
