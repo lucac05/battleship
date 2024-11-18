@@ -13,7 +13,7 @@
 
 
 
-#define min(a, b) (a) < (b) ? (a) : (b)
+#define min(a, b) ((a) < (b) ? (a) : (b))
 
 typedef struct Piece{
     int my_number;
