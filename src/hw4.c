@@ -867,14 +867,14 @@ int main() {
                         if(cur_num < 1 || cur_num > 4)//rotation out of range
                             err = min(err, 301);
                     }
-                    else if(i % 4 == 2){
+                    /*else if(i % 4 == 2){
                         if(cur_num >= board_width)//ship doesn't fit in board (column issue)
                             err = min(err, 302);
                     }
                     else{
                         if(cur_num >= board_height)//ship doesn't fit in board (row issue)
                             err = min(err, 302);
-                    }
+                    }*/
                     if(cur_num < 0)
                         err = min(err, 201);//is this the right error code for a negative input?
                 }
