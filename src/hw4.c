@@ -36,7 +36,7 @@ typedef struct Player{
 
 
 //global string
-char *ENTER_TEXT = "BANANAS";
+//char *ENTER_TEXT = "BANANAS";
 
 int glbl_height, glbl_width;
 
@@ -550,8 +550,8 @@ int main() {
                     printf("[Server] Enter message for client1: %s\n", err_str);
                     memset(buffer, 0, BUFFER_SIZE);
                     
-                    if(err_str[0] == '\0')
-                        strcpy(err_str, ENTER_TEXT);
+                    /*if(err_str[0] == '\0')
+                        strcpy(err_str, ENTER_TEXT);*/
                         //memset(err_str, 88, sizeof(err_str));
                     if(send(conn_fd_1, err_str, strlen(err_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -630,8 +630,8 @@ int main() {
                     printf("[Server] Enter message for client1: %s\n", err_str);
                     memset(buffer, 0, BUFFER_SIZE);
 
-                    if(err_str[0] == '\0')
-                        strcpy(err_str, ENTER_TEXT);
+                    /*if(err_str[0] == '\0')
+                        strcpy(err_str, ENTER_TEXT);*/
                         //memset(err_str, 88, sizeof(err_str));
                     if(send(conn_fd_1, err_str, strlen(err_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -672,8 +672,8 @@ int main() {
                     printf("[Server] Enter message for client1: %s\n", msg_str);
                     printf("strlen(msg_str): %d", strlen(msg_str));
 
-                    if(msg_str[0] == '\0')
-                        strcpy(msg_str, ENTER_TEXT);
+                    /*if(msg_str[0] == '\0')
+                        strcpy(msg_str, ENTER_TEXT);*/
                         //memset(msg_str, 88, sizeof(msg_str));
                     if(send(conn_fd_1, msg_str, strlen(msg_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -723,8 +723,8 @@ int main() {
                     printf("[Server] Enter message for client1: %s\n", msg_str);
                     printf("strlen(msg_str): %d", strlen(msg_str));
 
-                    if(msg_str[0] == '\0')
-                        strcpy(msg_str, ENTER_TEXT);
+                    /*if(msg_str[0] == '\0')
+                        strcpy(msg_str, ENTER_TEXT);*/
                         //memset(msg_str, 88, sizeof(msg_str));
                     if(send(conn_fd_1, msg_str, strlen(msg_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -1154,8 +1154,8 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     
                     printf("strlen(err_str): %d", strlen(err_str));
-                    if(err_str[0] == '\0')
-                        strcpy(err_str, ENTER_TEXT);
+                    /*if(err_str[0] == '\0')
+                        strcpy(err_str, ENTER_TEXT);*/
                         //memset(err_str, 88, sizeof(err_str));
                     if(send(conn_fd_2, err_str, strlen(err_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -1231,8 +1231,8 @@ int main() {
                     printf("[Server] Enter message for client2: %s\n", err_str);
                     memset(buffer, 0, BUFFER_SIZE);
                     printf("strlen(err_str): %d", strlen(err_str));
-                    if(err_str[0] == '\0')
-                        strcpy(err_str, ENTER_TEXT);
+                    /*if(err_str[0] == '\0')
+                        strcpy(err_str, ENTER_TEXT);*/
                         //memset(err_str, 88, sizeof(err_str));
                     if(send(conn_fd_2, err_str, strlen(err_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -1275,8 +1275,8 @@ int main() {
                     printf("[Server] Enter message for client2: %s\n", msg_str);
                     
                     printf("strlen(msg_str): %d", strlen(msg_str));
-                    if(msg_str[0] == '\0')
-                        strcpy(msg_str, ENTER_TEXT);
+                    /*if(msg_str[0] == '\0')
+                        strcpy(msg_str, ENTER_TEXT);*/
                         //memset(msg_str, 88, sizeof(msg_str));
                     if(send(conn_fd_2, msg_str, strlen(msg_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
@@ -1326,8 +1326,8 @@ int main() {
                     printf("[Server] Enter message for client2: %s\n", msg_str);
                     
                     printf("strlen(msg_str): %d", strlen(msg_str));
-                    if(msg_str[0] == '\0')
-                        strcpy(msg_str, ENTER_TEXT);
+                    /*if(msg_str[0] == '\0')
+                        strcpy(msg_str, ENTER_TEXT);*/
                         //memset(msg_str, 88, sizeof(msg_str));
                     if(send(conn_fd_2, msg_str, strlen(msg_str), 0) < 0)
                         perror("[Server] Failed to send packet to player.");
