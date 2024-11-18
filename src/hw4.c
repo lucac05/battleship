@@ -314,8 +314,8 @@ int main() {
 
                 if(err == 9999999){//error code BEFORE CHECKING 302 & 303
 
-                    p1 = calloc(1, sizeof(Player));//FREE
-                    p1->board = calloc(glbl_height, sizeof(int *));//FREE
+                    p1 = malloc(sizeof(Player));//FREE
+                    p1->board = malloc(glbl_height * sizeof(int *));//FREE
                     for(int i = 0; i < glbl_height; i++)
                         p1->board[i] = calloc(glbl_width, sizeof(int));//FREE
 
@@ -579,7 +579,7 @@ int main() {
                     //sprintf(test, "%d %d", glbl_height, glbl_width);
                     //send(conn_fd_1, test, sizeof(test), 0);//LEONARDO DA VINCI
 
-                    p1->my_shots = calloc(glbl_height, sizeof(int *));//FREE
+                    p1->my_shots = malloc(glbl_height * sizeof(int *));//FREE
                     for(int i = 0; i < board_height; i++)
                         p1->my_shots[i] = calloc(glbl_width, sizeof(int));//FREE
                     
@@ -867,14 +867,6 @@ int main() {
                         if(cur_num < 1 || cur_num > 4)//rotation out of range
                             err = min(err, 301);
                     }
-                    /*else if(i % 4 == 2){
-                        if(cur_num >= board_width)//ship doesn't fit in board (column issue)
-                            err = min(err, 302);
-                    }
-                    else{
-                        if(cur_num >= board_height)//ship doesn't fit in board (row issue)
-                            err = min(err, 302);
-                    }*/
                     if(cur_num < 0)
                         err = min(err, 201);//is this the right error code for a negative input?
                 }
@@ -900,8 +892,8 @@ int main() {
 
                 if(err == 9999999){//error code BEFORE CHECKING 302 & 303
 
-                    p2 = calloc(1, sizeof(Player));//FREE
-                    p2->board = calloc(glbl_height, sizeof(int *));//FREE
+                    p2 = malloc(sizeof(Player));//FREE
+                    p2->board = malloc(glbl_height * sizeof(int *));//FREE
                     for(int i = 0; i < glbl_height; i++)
                         p2->board[i] = calloc(glbl_width, sizeof(int));//FREE
 
@@ -1163,7 +1155,7 @@ int main() {
                     continue;
                 }
                 else{
-                    p2->my_shots = calloc(glbl_height, sizeof(int *));//FREE
+                    p2->my_shots = malloc(glbl_height * sizeof(int *));//FREE
                     for(int i = 0; i < board_height; i++)
                         p2->my_shots[i] = calloc(glbl_width, sizeof(int));//FREE
                     
