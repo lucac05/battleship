@@ -734,15 +734,7 @@ int main() {
                 }
             }*/
             
-            if(!wrote_to_c1){
-                printf("[Server] Enter message for client1: response\n");
-                memset(buffer, 0, BUFFER_SIZE);
-                //fgets(buffer, BUFFER_SIZE, stdin);
-                //buffer[strlen(buffer)-1] = '\0';
-                if(send(conn_fd_1, "buffer", 7, 0) < 0)
-                    perror("[Server] Failed to send packet to player.");
-                
-           }
+            
 
         }
 
