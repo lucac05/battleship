@@ -688,7 +688,6 @@ int main() {
                     char msg_str[999] = {0};
                     strcpy(msg_str, "G ");
                     strcat(msg_str, helper_str);
-                    printf("CUR_MSG: %s\n", msg_str);
 
                     for(int r = 0; r < glbl_height; r++){
                         for(int c = 0; c < glbl_width; c++){
@@ -715,10 +714,6 @@ int main() {
                     memset(buffer, 0, BUFFER_SIZE);
                     continue;//still p1's turn so skip p2
 
-                }
-                else{
-                    for(int i = 0; i < 1000; i++)
-                        printf("How did we get here?");
                 }
             }
 
@@ -1293,11 +1288,6 @@ int main() {
                     continue;//still p2's turn so skip p1
 
                 }
-                /*else{
-                    for(int i = 0; i < 1000; i++)
-                        printf("How did we get here?");
-                }*/
-
             }
             
             
@@ -1317,12 +1307,6 @@ int main() {
             }*/
 
         }
-        
-
-        /*if(conn_fd_1 == -1 && conn_fd_2 == -1){
-            printf("All clients disconnecting. Closing server...");
-            break;
-        }*/
     }
 
     for(int i = 0; i < glbl_height; i++){
